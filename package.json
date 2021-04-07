@@ -1,0 +1,23 @@
+{
+  "name": "flaka",
+  "version": "1.0.0",
+  "description": "Streaming player for web player",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rhapsody/flaka.git"
+  },
+  "author": "Antonio Novoselnik <antonio.novoselnik@napster.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rhapsody/flaka/issues"
+  },
+  "homepage": "https://github.com/Rhapsody/flaka#readme",
+  "dependencies": {
+    "shaka-player": "^3.0.10"
+  }
+}
