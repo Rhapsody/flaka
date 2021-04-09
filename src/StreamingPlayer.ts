@@ -1,21 +1,19 @@
-import './types/shaka';
-import './types/ima';
-import {Player, polyfill, net} from "shaka-player";
-import {StreamingPlayerOptions} from './types/types';
+import { Player, polyfill, net, util } from 'shaka-player';
+import { StreamingPlayerOptions } from './types';
 
 export class StreamingPlayer {
   player?: Player;
-  videoElement?: HTMLVideoElement;
+  videoElement: HTMLVideoElement;
   constructor(id: string, options: StreamingPlayerOptions) {
     polyfill.installAll();
 
     this.videoElement = document.getElementById(id) as HTMLVideoElement;
-    
+
     if (!this.videoElement) {
       const videoElement = document.createElement('video');
       videoElement.id = id;
       videoElement.autoplay = true;
-      
+
       document.body.appendChild(videoElement);
 
       this.videoElement = videoElement;
@@ -38,33 +36,33 @@ export class StreamingPlayer {
     }
   }
 
-  initPlayer() {
+  initPlayer(): void {
     this.player = new Player(this.videoElement);
 
     // Listen for error events.
     this.player.addEventListener('error', this.onErrorEvent);
   }
 
-  onError(error) {
+  onError(error: util.Error): void {
     // Log the error.
     console.error('Error code', error.code, 'object', error);
   }
 
-  onErrorEvent(event) {
+  onErrorEvent(event: Player.ErrorEvent): void {
     this.onError(event.detail);
   }
 
-  async play(url: string, serverUrl: string, token: string) {
+  async play(url: string, serverUrl: string, token: string): Promise<void> {
     this.player.resetConfiguration();
 
     this.player.configure({
       drm: {
-        servers: { "com.widevine.alpha": serverUrl },
+        servers: { 'com.widevine.alpha': serverUrl },
         // 'com.microsoft.playready': stream.tokenServerUrl
       },
     });
 
-    this.player.getNetworkingEngine().registerRequestFilter(function(type, request) {
+    this.player.getNetworkingEngine().registerRequestFilter(function (type, request) {
       // Only add headers to license requests:
       if (type === net.NetworkingEngine.RequestType.LICENSE) {
         // This is the specific header name and value the server wants:
@@ -72,7 +70,7 @@ export class StreamingPlayer {
       }
     });
 
-    console.log('PLAYING SONG: ', url)
+    console.log('PLAYING SONG: ', url);
 
     // Try to load a manifest.
     // This is an asynchronous process.
@@ -86,15 +84,15 @@ export class StreamingPlayer {
     }
   }
 
-  pause() {
+  pause(): void {
     this.videoElement.pause();
   }
 
-  resume() {
+  resume(): void {
     this.videoElement.play();
   }
-  
-  seek(time: number) {
+
+  seek(time: number): void {
     this.videoElement.currentTime = time;
   }
 }
