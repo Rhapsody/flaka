@@ -1,26 +1,23 @@
-name: Publish to GitHub Pages
+name: Publish docs
 
 on:
   push:
     branches:
       - main
-
 jobs:
-  publish:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out
-        uses: actions/checkout@v1
-      
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2.3.1
 
-      - name: Generate docs
-        run: yarn docs
+      - name: Install and generate docs
+        run: |
+          yarn install --frozen-lockfile
+          yarn docs
 
-      - name: Publish generated docs to GitHub Pages
-        uses: tsunematsu21/actions-publish-gh-pages@v1.0.1
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@4.1.1
         with:
-          dir: docs
           branch: gh-pages
-          token: ${{ secrets.ACCESS_TOKEN }}
+          folder: docs
