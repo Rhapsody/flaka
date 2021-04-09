@@ -7,7 +7,7 @@
     "build": "tsc",
     "lint": "eslint 'src' --ext .ts --fix",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "node ./node_modules/husky/lib/bin install"
+    "install": "npm run build"
   },
   "repository": {
     "type": "git",
