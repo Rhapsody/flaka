@@ -21,7 +21,8 @@
   },
   "homepage": "https://github.com/Rhapsody/flaka#readme",
   "dependencies": {
-    "shaka-player": "^3.0.10"
+    "shaka-player": "^3.0.10",
+    "typedoc": "^0.20.35"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.21.0",
@@ -41,6 +42,6 @@
     ]
   },
   "publishConfig": {
-    "registry":"https://npm.pkg.github.com"
-  }  
+    "registry": "https://npm.pkg.github.com"
+  }
 }
