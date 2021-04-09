@@ -11,6 +11,7 @@
 declare module 'shaka-player' {
   namespace polyfill {
     function installAll(): void;
+    // eslint-disable-next-line @typescript-eslint/ban-types
     function register(polyfill: Function, priority?: number): void;
 
     /**
@@ -21,20 +22,20 @@ declare module 'shaka-player' {
       static install(): void;
     }
 
-    class Fullscreen extends polyfill_install { }
-    class IndexedDB extends polyfill_install { }
-    class InputEvent extends polyfill_install { }
-    class MathRound extends polyfill_install { }
-    class MediaSource extends polyfill_install { }
-    class VideoPlaybackQuality extends polyfill_install { }
-    class VideoPlayPromise extends polyfill_install { }
-    class VTTCue extends polyfill_install { }
+    class Fullscreen extends polyfill_install {}
+    class IndexedDB extends polyfill_install {}
+    class InputEvent extends polyfill_install {}
+    class MathRound extends polyfill_install {}
+    class MediaSource extends polyfill_install {}
+    class VideoPlaybackQuality extends polyfill_install {}
+    class VideoPlayPromise extends polyfill_install {}
+    class VTTCue extends polyfill_install {}
 
     class PatchedMediaKeysMs extends polyfill_install {
       static setMediaKeys(mediaKeys: MediaKeys): void;
       static requestMediaKeySystemAccess(
         keySystem: string,
-        supportedConfigurations: MediaKeySystemConfiguration[]
+        supportedConfigurations: MediaKeySystemConfiguration[],
       ): Promise<MediaKeySystemAccess>;
     }
 
@@ -42,7 +43,7 @@ declare module 'shaka-player' {
       static setMediaKeys(mediaKeys: MediaKeys): void;
       static requestMediaKeySystemAccess(
         keySystem: string,
-        supportedConfigurations: MediaKeySystemConfiguration[]
+        supportedConfigurations: MediaKeySystemConfiguration[],
       ): Promise<MediaKeySystemAccess>;
     }
 
@@ -50,33 +51,33 @@ declare module 'shaka-player' {
       static setMediaKeys(mediaKeys: MediaKeys): void;
       static requestMediaKeySystemAccess(
         keySystem: string,
-        supportedConfigurations: MediaKeySystemConfiguration[]
+        supportedConfigurations: MediaKeySystemConfiguration[],
       ): Promise<MediaKeySystemAccess>;
     }
   }
 
   interface EventMap {
-    'abrstatuschanged': Player.AbrStatusChangedEvent,
-    'adaptation': Player.AdaptationEvent,
-    'buffering': Player.BufferingEvent,
-    'drmsessionupdate': Player.DrmSessionUpdateEvent,
-    'emsg': Player.EmsgEvent,
-    'error': Player.ErrorEvent,
-    'expirationupdated': Player.ExpirationUpdatedEvent,
-    'largegap': Player.LargeGapEvent,
-    'loading': Player.LoadingEvent,
-    'manifestparsed': Player.ManifestParsedEvent,
-    'onstatechange': Player.StateChangeEvent,
-    'onstateidle': Player.StateIdleEvent,
-    'streaming': Player.StreamingEvent,
-    'textchanged': Player.TextChangedEvent,
-    'texttrackvisibility': Player.TextTrackVisibilityEvent,
-    'timelineregionadded': Player.TimelineRegionAddedEvent,
-    'timelineregionenter': Player.TimelineRegionEnterEvent,
-    'timelineregionexit': Player.TimelineRegionExitEvent,
-    'trackschanged': Player.TracksChangedEvent,
-    'unloading': Player.UnloadingEvent,
-    'variantchanged': Player.VariantChangedEvent,
+    abrstatuschanged: Player.AbrStatusChangedEvent;
+    adaptation: Player.AdaptationEvent;
+    buffering: Player.BufferingEvent;
+    drmsessionupdate: Player.DrmSessionUpdateEvent;
+    emsg: Player.EmsgEvent;
+    error: Player.ErrorEvent;
+    expirationupdated: Player.ExpirationUpdatedEvent;
+    largegap: Player.LargeGapEvent;
+    loading: Player.LoadingEvent;
+    manifestparsed: Player.ManifestParsedEvent;
+    onstatechange: Player.StateChangeEvent;
+    onstateidle: Player.StateIdleEvent;
+    streaming: Player.StreamingEvent;
+    textchanged: Player.TextChangedEvent;
+    texttrackvisibility: Player.TextTrackVisibilityEvent;
+    timelineregionadded: Player.TimelineRegionAddedEvent;
+    timelineregionenter: Player.TimelineRegionEnterEvent;
+    timelineregionexit: Player.TimelineRegionExitEvent;
+    trackschanged: Player.TracksChangedEvent;
+    unloading: Player.UnloadingEvent;
+    variantchanged: Player.VariantChangedEvent;
   }
 
   class Player extends util.FakeEventTarget implements util.IDestroyable {
@@ -121,6 +122,7 @@ declare module 'shaka-player' {
      * return value from support().
      */
 
+    // eslint-disable-next-line @typescript-eslint/ban-types
     static registerSupportPlugin(name: string, callback: Function): void;
 
     /**
@@ -133,13 +135,14 @@ declare module 'shaka-player' {
     addEventListener<K extends keyof EventMap>(
       type: K,
       listener: (event: EventMap[K]) => boolean | void | undefined,
-      options?: AddEventListenerOptions): void;
+      options?: AddEventListenerOptions,
+    ): void;
 
     // eslint-disable-next-line no-dupe-class-members
     addEventListener(
       type: string,
       listener: util.FakeEventTarget.ListenerType,
-      options?: AddEventListenerOptions
+      options?: AddEventListenerOptions,
     ): void;
 
     /**
@@ -161,7 +164,7 @@ declare module 'shaka-player' {
       kind: string,
       mime: string,
       codec?: string,
-      label?: string
+      label?: string,
     ): extern.Track;
 
     /**
@@ -178,7 +181,7 @@ declare module 'shaka-player' {
      * @param initializeMediaSource
      */
 
-    attach(mediaElem: HTMLMediaElement, initializeMediaSource?: boolean): Promise<any>;
+    attach(mediaElem: HTMLMediaElement, initializeMediaSource?: boolean): Promise<unknown>;
 
     /**
      * Cancel trick-play. If the player has not loaded content or is
@@ -206,7 +209,7 @@ declare module 'shaka-player' {
      * used again.
      */
 
-    destroy(): Promise<any>;
+    destroy(): Promise<unknown>;
 
     /**
      * Tell the player to stop using its current media element.
@@ -223,7 +226,7 @@ declare module 'shaka-player' {
      * `detach`, or `unload`.
      */
 
-    detach(): Promise<any>;
+    detach(): Promise<unknown>;
 
     /**
      * Get the drm info used to initialize EME. If EME is
@@ -466,8 +469,8 @@ declare module 'shaka-player' {
     load(
       assetUri: string,
       startTime?: number | null,
-      mimeType?: string | extern.ManifestParser.Factory
-    ): Promise<any>;
+      mimeType?: string | extern.ManifestParser.Factory,
+    ): Promise<unknown>;
 
     /** Reset configuration to default.*/
 
@@ -608,7 +611,7 @@ declare module 'shaka-player' {
      * calls to `load` but cannot interrupt calls to
      * `attach`, `detach`, or `unload`.
      */
-    unload(reinitializeMediaSource?: boolean): Promise<any>;
+    unload(reinitializeMediaSource?: boolean): Promise<unknown>;
 
     /** @deprecated */
     usingEmbeddedTextTrack(): boolean;
@@ -898,12 +901,12 @@ declare module 'shaka-player' {
         constructor(
           promise: Promise<T>,
           onAbort: ConstructorParameters<typeof util.AbortableOperation>['1'],
-          numBytesRemainingObj: NetworkingEngine.NumBytesRemainingClass
+          numBytesRemainingObj: NetworkingEngine.NumBytesRemainingClass,
         );
         abort(): ReturnType<util.AbortableOperation<T>['abort']>;
         chain<U>(
           onSuccess: Parameters<util.AbortableOperation<T>['chain']>[0],
-          onError?: Parameters<util.AbortableOperation<T>['chain']>[1]
+          onError?: Parameters<util.AbortableOperation<T>['chain']>[1],
         ): util.AbortableOperation<U>;
         finally(): util.AbortableOperation<T>;
       }
@@ -952,10 +955,7 @@ declare module 'shaka-player' {
       registerResponseFilter(filter: extern.ResponseFilter): void;
 
       /** Makes a network request and returns the resulting data. */
-      request(
-        type: net.NetworkingEngine.RequestType,
-        request: extern.Request
-      ): net.NetworkingEngine.PendingRequest;
+      request(type: net.NetworkingEngine.RequestType, request: extern.Request): net.NetworkingEngine.PendingRequest;
 
       /** Removes a request filter. */
       unregisterRequestFilter(filter: extern.RequestFilter): void;
@@ -963,7 +963,7 @@ declare module 'shaka-player' {
       /** Removes a response filter. */
       unregisterResponseFilter(filter: extern.ResponseFilter): void;
 
-      destroy(): Promise<any>;
+      destroy(): Promise<unknown>;
     }
   }
 
@@ -982,7 +982,7 @@ declare module 'shaka-player' {
         endTime: number,
         uris: () => string[],
         startByte: number,
-        endByte: number | null
+        endByte: number | null,
       );
       createUris(): string[];
       getEndByte(): number | undefined | null;
@@ -1159,9 +1159,9 @@ declare module 'shaka-player' {
        *          aborts all given operations.
        */
 
-      static all(operations: AbortableOperation<any>[]): AbortableOperation<any>;
+      static all(operations: AbortableOperation<unknown>[]): AbortableOperation<unknown>;
       static completed<U>(value: U): AbortableOperation<U>;
-      static failed(error: Error): AbortableOperation<any>;
+      static failed(error: Error): AbortableOperation<unknown>;
       static notAbortable<U>(promise: Promise<U>): AbortableOperation<U>;
       abort(): ReturnType<ConstructorParameters<typeof util.AbortableOperation>['1']>;
 
@@ -1178,7 +1178,8 @@ declare module 'shaka-player' {
 
       chain<U>(
         onSuccess?: (value: T) => any | Promise<U> | AbortableOperation<U>,
-        onError?: Function
+        // eslint-disable-next-line @typescript-eslint/ban-types
+        onError?: Function,
       ): AbortableOperation<U>;
       finally(onFinal: (arg: boolean) => void): ThisType<T>;
     }
@@ -1211,11 +1212,7 @@ declare module 'shaka-player' {
     namespace StringUtils {
       function fromBytesAutoDetect(data: BufferSource | null): string;
       function fromUTF8(data: BufferSource | null): string;
-      function fromUTF16(
-        data: BufferSource | null,
-        littleEndian?: boolean,
-        opt_noThrow?: boolean
-      ): string;
+      function fromUTF16(data: BufferSource | null, littleEndian?: boolean, opt_noThrow?: boolean): string;
       function toUTF8(str: string): ArrayBuffer;
     }
 
@@ -1224,7 +1221,6 @@ declare module 'shaka-player' {
     }
 
     class FakeEventTarget {
-
       /**
        * A work-alike for EventTarget. Only DOM elements may be true
        * EventTargets, but this can be used as a base class to
@@ -1242,11 +1238,7 @@ declare module 'shaka-player' {
        * @param options Ignored.
        */
 
-      addEventListener(
-        type: string,
-        listener: FakeEventTarget.ListenerType,
-        options?: AddEventListenerOptions
-      ): void;
+      addEventListener(type: string, listener: FakeEventTarget.ListenerType, options?: AddEventListenerOptions): void;
 
       /**
        * Dispatch an event from this object
@@ -1266,7 +1258,7 @@ declare module 'shaka-player' {
       removeEventListener(
         type: string,
         listener: FakeEventTarget.ListenerType,
-        options?: EventListenerOptions | boolean
+        options?: EventListenerOptions | boolean,
       ): void;
     }
 
@@ -1278,18 +1270,13 @@ declare module 'shaka-player' {
        * never be rejected.
        */
 
-      destroy(): Promise<any>;
+      destroy(): Promise<unknown>;
     }
 
     class Error {
-      constructor(
-        severity: Error.Severity,
-        category: Error.Category,
-        code: Error.Code,
-        ...var_args: any
-      );
+      constructor(severity: Error.Severity, category: Error.Category, code: Error.Code, ...var_args: any);
 
-      data: Array<any>;
+      data: Array<unknown>;
       category: util.Error.Category;
       severity: util.Error.Severity;
       code: util.Error.Code;
@@ -1428,24 +1415,14 @@ declare module 'shaka-player' {
   }
 
   namespace extern {
-    type ProgressUpdated = (
-      duration: number,
-      downloadedBytes: number,
-      remainingBytes: number
-    ) => void;
-    type RequestFilter = (
-      type: net.NetworkingEngine.RequestType,
-      request: Request
-    ) => void | Promise<any>;
-    type ResponseFilter = (
-      type: net.NetworkingEngine.RequestType,
-      response: Response
-    ) => void | Promise<any>;
+    type ProgressUpdated = (duration: number, downloadedBytes: number, remainingBytes: number) => void;
+    type RequestFilter = (type: net.NetworkingEngine.RequestType, request: Request) => void | Promise<unknown>;
+    type ResponseFilter = (type: net.NetworkingEngine.RequestType, response: Response) => void | Promise<unknown>;
     type SchemePlugin = (
       uri: string,
       request: Request,
       type: net.NetworkingEngine.RequestType,
-      progressUpdated?: ProgressUpdated
+      progressUpdated?: ProgressUpdated,
     ) => IAbortableOperation<Response>;
 
     // @see: https://shaka-player-demo.appspot.com/docs/api/shakaExtern.html#.Request
@@ -1576,7 +1553,7 @@ declare module 'shaka-player' {
        * returned Promise should never be rejected.
        */
 
-      abort(): Promise<any>;
+      abort(): Promise<unknown>;
 
       /**
        * @param onFinal A callback to be invoked after the operation succeeds
@@ -1711,6 +1688,7 @@ declare module 'shaka-player' {
 
     interface StreamingConfiguration {
       retryParameters?: RetryParameters;
+      // eslint-disable-next-line @typescript-eslint/ban-types
       failureCallback?: Function;
       rebufferingGoal?: number; // seconds
       bufferingGoal?: number;
@@ -1767,7 +1745,7 @@ declare module 'shaka-player' {
       channelsCount: number | null;
     }
 
-    type CreateSegmentIndexFunction = () => Promise<any>;
+    type CreateSegmentIndexFunction = () => Promise<unknown>;
     type FindSegmentPositionFunction = (number: number) => number;
     type GetSegmentReferenceFunction = (number: number) => media.SegmentReference;
 
@@ -1896,7 +1874,6 @@ declare module 'shaka-player' {
     }
 
     interface HlsManifestConfiguration {
-      /** If true, ignore any errors in a text stream and filter out those streams. */
       ignoreTextStreamFailures: boolean;
     }
 
@@ -1916,10 +1893,10 @@ declare module 'shaka-player' {
       config(config: ManifestConfiguration): void;
       onExpirationUpdated(sessionid: string, expiration: number): void;
       start(uri: string, playerInterface: ManifestParser.PlayerInterface): Promise<Manifest>;
-      stop(): Promise<any>;
+      stop(): Promise<unknown>;
       update(): void;
     }
 
-    interface TimelineRegionInfo { }
+    // interface TimelineRegionInfo {}
   }
 }
