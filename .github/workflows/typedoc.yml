@@ -13,10 +13,10 @@ jobs:
         uses: actions/checkout@v1
       
       - name: Install dependencies
-        run: npm ci
+        run: yarn ci
 
       - name: Generate docs
-        run: npm run docs
+        run: yarn docs
 
       - name: Publish generated docs to GitHub Pages
         uses: tsunematsu21/actions-publish-gh-pages@v1.0.1
