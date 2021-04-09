@@ -6,9 +6,10 @@
   "private": true,
   "scripts": {
     "build": "tsc",
+    "docs": "typedoc --out docs src",
+    "install": "npm run build",
     "lint": "eslint 'src' --ext .ts --fix",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "install": "npm run build"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",

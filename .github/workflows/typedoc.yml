@@ -1,15 +1,26 @@
-name: Publish Typedoc to Github Pages
+name: Publish to GitHub Pages
+
 on:
   push:
     branches:
       - main
-      - master
+
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: TypeStrong/typedoc-action@v1
+      - name: Check out
+        uses: actions/checkout@v1
+      
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate docs
+        run: npm run docs
+
+      - name: Publish generated docs to GitHub Pages
+        uses: tsunematsu21/actions-publish-gh-pages@v1.0.1
         with:
-          args: --entrypoints src/index.ts
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          dir: docs
+          branch: gh-pages
+          token: ${{ secrets.ACCESS_TOKEN }}
