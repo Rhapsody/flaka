@@ -12,6 +12,12 @@ const options = {
 const streamingPlayer = new StreamingPlayer('streaming-player-id', options);
 
 streamingPlayer.play(url: string, serverUrl: string, token: string);
+
+streamingPlayer.pause();
+
+streamingPlayer.resume();
+
+streamingPlayer.seek(time: number);
 ```
 
 ## Development
