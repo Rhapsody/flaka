@@ -1,4 +1,4 @@
-export interface StreamingPlayerOptions {
-  onTimeUpdate: (duration) => void;
-  onDurationUpdate: (duration) => void;
+export interface FlakaPlayerOptions {
+  onTimeUpdate?: (duration) => void;
+  onDurationUpdate?: (duration) => void;
 }

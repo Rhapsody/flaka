@@ -1,22 +1,15 @@
-import { Player, polyfill, net, util } from 'shaka-player';
-import { StreamingPlayerOptions } from './types';
+import { Player, polyfill, net, util, extern } from 'shaka-player';
+import { createVideoElement } from './helpers';
+import { FlakaPlayerOptions } from './types';
 
-export class StreamingPlayer {
+export class FlakaPlayer {
   player?: Player;
   videoElement: HTMLVideoElement;
-  constructor(id: string, options: StreamingPlayerOptions) {
-    polyfill.installAll();
-
+  constructor(id: string, options: FlakaPlayerOptions) {
     this.videoElement = document.getElementById(id) as HTMLVideoElement;
 
     if (!this.videoElement) {
-      const videoElement = document.createElement('video');
-      videoElement.id = id;
-      videoElement.autoplay = true;
-
-      document.body.appendChild(videoElement);
-
-      this.videoElement = videoElement;
+      this.videoElement = createVideoElement(id);
     }
 
     this.videoElement.addEventListener('timeupdate', (event: Event & { target: HTMLVideoElement }) => {
@@ -29,7 +22,7 @@ export class StreamingPlayer {
 
     // Check to see if the browser supports the basic APIs Shaka needs.
     if (Player.isBrowserSupported()) {
-      // Everything looks good!
+      polyfill.installAll();
       this.initPlayer();
     } else {
       throw new Error('Browser is not supported');
@@ -52,32 +45,32 @@ export class StreamingPlayer {
     this.onError(event.detail);
   }
 
-  async play(url: string, serverUrl: string, token: string): Promise<void> {
+  async play(url: string, servers?: extern.DrmConfiguration['servers'], token?: string): Promise<void> {
     this.player.resetConfiguration();
 
-    this.player.configure({
-      drm: {
-        servers: { 'com.widevine.alpha': serverUrl },
-        // 'com.microsoft.playready': stream.tokenServerUrl
-      },
-    });
+    this.player.attach(this.videoElement);
 
-    this.player.getNetworkingEngine().registerRequestFilter(function (type, request) {
-      // Only add headers to license requests:
-      if (type === net.NetworkingEngine.RequestType.LICENSE) {
-        // This is the specific header name and value the server wants:
-        request.headers['customdata'] = token;
-      }
-    });
+    if (servers) {
+      this.player.configure({
+        drm: {
+          servers,
+        },
+      });
+    }
 
-    console.log('PLAYING SONG: ', url);
+    if (token) {
+      this.player.getNetworkingEngine().registerRequestFilter(function (type, request) {
+        if (type === net.NetworkingEngine.RequestType.LICENSE) {
+          request.headers['customdata'] = token;
+        }
+      });
+    }
 
     // Try to load a manifest.
     // This is an asynchronous process.
     try {
       await this.player.load(url);
-      // This runs if the asynchronous load is successful.
-      console.log('The video has now been loaded!');
+      console.log('PLAYING SONG: ', url);
     } catch (e) {
       // onError is executed if the asynchronous load fails.
       this.onError(e);

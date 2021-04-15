@@ -1,1 +1,1 @@
-export { StreamingPlayer } from './StreamingPlayer';
+export { FlakaPlayer } from './FlakaPlayer';
