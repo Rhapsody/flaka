@@ -10,12 +10,6 @@ import { FlakaPlayer } from '../FlakaPlayer';
 const TEST_PLAYER_ID = 'flaka-player-test';
 const TEST_MANIFEST_URL = 'https://test.com/manifest.mpd';
 
-Object.defineProperty(navigator, 'MediaCapabilities', {
-  writable: true,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  value: jest.fn().mockImplementation(() => {}),
-});
-
 test('should create video element in the dom', () => {
   const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {});
   const videoElement = document.getElementById(TEST_PLAYER_ID);
@@ -24,7 +18,13 @@ test('should create video element in the dom', () => {
   expect(videoElement.id).toStrictEqual(TEST_PLAYER_ID);
 });
 
-test('should call shaka-player load method with correct parameters', async () => {
+test('should instance shaka-player', () => {
+  const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {});
+
+  expect(flakaPlayer.player).toBeInstanceOf(Player);
+});
+
+test('should call shaka-player load method with correct parameters on play', async () => {
   const playerLoadMock = jest.fn();
   const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {});
 
