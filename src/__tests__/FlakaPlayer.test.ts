@@ -24,6 +24,34 @@ test('should instance shaka-player', () => {
   expect(flakaPlayer.player).toBeInstanceOf(Player);
 });
 
+test('should call validatePlayback before playing the track', () => {
+  const validatePlaybackMock = jest.fn(() => Promise.resolve());
+  const playerLoadMock = jest.fn();
+
+  const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {
+    validatePlayback: validatePlaybackMock,
+  });
+
+  flakaPlayer.player.load = playerLoadMock;
+
+  flakaPlayer.play(TEST_MANIFEST_URL);
+
+  expect(validatePlaybackMock).toBeCalled();
+});
+
+test('should call validatePlayback and throw error if validatePlayback fails', () => {
+  const validatePlaybackMock = jest.fn(() => Promise.reject());
+  const playerLoadMock = jest.fn();
+
+  const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {
+    validatePlayback: validatePlaybackMock,
+  });
+
+  flakaPlayer.player.load = playerLoadMock;
+
+  expect(flakaPlayer.play(TEST_MANIFEST_URL)).rejects.toThrowError();
+});
+
 test('should call shaka-player load method with correct parameters on play', async () => {
   const playerLoadMock = jest.fn();
   const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {});

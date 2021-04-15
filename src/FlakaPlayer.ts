@@ -3,9 +3,11 @@ import { createVideoElement } from './helpers';
 import { FlakaPlayerOptions } from './types';
 
 export class FlakaPlayer {
+  options: FlakaPlayerOptions;
   player?: Player;
   videoElement: HTMLVideoElement;
   constructor(id: string, options: FlakaPlayerOptions) {
+    this.options = options;
     this.videoElement = document.getElementById(id) as HTMLVideoElement;
 
     if (!this.videoElement) {
@@ -48,8 +50,6 @@ export class FlakaPlayer {
   async play(url: string, servers?: extern.DrmConfiguration['servers'], token?: string): Promise<void> {
     this.player.resetConfiguration();
 
-    this.player.attach(this.videoElement);
-
     if (servers) {
       this.player.configure({
         drm: {
@@ -69,6 +69,11 @@ export class FlakaPlayer {
     // Try to load a manifest.
     // This is an asynchronous process.
     try {
+      // validate playback
+      if (this.options.validatePlayback) {
+        await this.options.validatePlayback();
+      }
+
       await this.player.load(url);
     } catch (e) {
       // onError is executed if the asynchronous load fails.
