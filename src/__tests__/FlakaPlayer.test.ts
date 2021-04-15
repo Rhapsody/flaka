@@ -34,3 +34,32 @@ test('should call shaka-player load method with correct parameters', async () =>
 
   expect(playerLoadMock).toBeCalledWith(TEST_MANIFEST_URL);
 });
+
+test('should pause track', () => {
+  const mock = jest.fn();
+  const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {});
+  flakaPlayer.videoElement.pause = mock;
+
+  flakaPlayer.pause();
+
+  expect(mock).toBeCalled();
+});
+
+test('should resume track', () => {
+  const mock = jest.fn();
+  const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {});
+  flakaPlayer.videoElement.play = mock;
+
+  flakaPlayer.resume();
+
+  expect(mock).toBeCalled();
+});
+
+test('should seek track', () => {
+  const seekTime = 10;
+  const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {});
+
+  flakaPlayer.seek(seekTime);
+
+  expect(flakaPlayer.videoElement.currentTime).toStrictEqual(seekTime);
+});

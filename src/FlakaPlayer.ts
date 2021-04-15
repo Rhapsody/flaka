@@ -70,7 +70,6 @@ export class FlakaPlayer {
     // This is an asynchronous process.
     try {
       await this.player.load(url);
-      console.log('PLAYING SONG: ', url);
     } catch (e) {
       // onError is executed if the asynchronous load fails.
       this.onError(e);
