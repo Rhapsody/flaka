@@ -6,6 +6,7 @@ Player.isBrowserSupported = () => true;
 polyfill.installAll = () => {};
 
 import { FlakaPlayer } from '../FlakaPlayer';
+import { PlayerState } from '../types';
 
 const TEST_PLAYER_ID = 'flaka-player-test';
 const TEST_MANIFEST_URL = 'https://test.com/manifest.mpd';
@@ -58,9 +59,23 @@ test('should call shaka-player load method with correct parameters on play', asy
 
   flakaPlayer.player.load = playerLoadMock;
 
-  flakaPlayer.play(TEST_MANIFEST_URL);
+  await flakaPlayer.play(TEST_MANIFEST_URL);
 
   expect(playerLoadMock).toBeCalledWith(TEST_MANIFEST_URL);
+});
+
+test('should trigger state change callback on play', async () => {
+  const onStateChangeMock = jest.fn();
+  const playerLoadMock = jest.fn();
+  const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {
+    onStateChange: onStateChangeMock,
+  });
+
+  flakaPlayer.player.load = playerLoadMock;
+
+  await flakaPlayer.play(TEST_MANIFEST_URL);
+
+  expect(onStateChangeMock).toBeCalledWith(PlayerState.PLAYING);
 });
 
 test('should pause track', () => {
@@ -73,6 +88,17 @@ test('should pause track', () => {
   expect(mock).toBeCalled();
 });
 
+test('should trigger state change callback on pause', async () => {
+  const onStateChangeMock = jest.fn();
+  const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {
+    onStateChange: onStateChangeMock,
+  });
+
+  flakaPlayer.pause();
+
+  expect(onStateChangeMock).toBeCalledWith(PlayerState.PAUSED);
+});
+
 test('should resume track', () => {
   const mock = jest.fn();
   const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {});
@@ -81,6 +107,16 @@ test('should resume track', () => {
   flakaPlayer.resume();
 
   expect(mock).toBeCalled();
+});
+
+test('should trigger state change callback on resume', async () => {
+  const onStateChangeMock = jest.fn();
+  const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {
+    onStateChange: onStateChangeMock,
+  });
+  flakaPlayer.resume();
+
+  expect(onStateChangeMock).toBeCalledWith(PlayerState.PLAYING);
 });
 
 test('should seek track', () => {

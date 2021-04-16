@@ -1,9 +1,10 @@
 import { Player, polyfill, net, util, extern } from 'shaka-player';
 import { createVideoElement } from './helpers';
-import { FlakaPlayerOptions } from './types';
+import { FlakaPlayerOptions, PlayerState } from './types';
 
 export class FlakaPlayer {
   options: FlakaPlayerOptions;
+  state: PlayerState = PlayerState.STOPPED;
   player?: Player;
   videoElement: HTMLVideoElement;
   constructor(id: string, options: FlakaPlayerOptions) {
@@ -47,6 +48,13 @@ export class FlakaPlayer {
     this.onError(event.detail);
   }
 
+  changeState(newState: PlayerState): void {
+    this.state = newState;
+    if (this.options.onStateChange) {
+      this.options.onStateChange(this.state);
+    }
+  }
+
   async play(url: string, servers?: extern.DrmConfiguration['servers'], token?: string): Promise<void> {
     this.player.resetConfiguration();
 
@@ -75,6 +83,8 @@ export class FlakaPlayer {
       }
 
       await this.player.load(url);
+
+      this.changeState(PlayerState.PLAYING);
     } catch (e) {
       // onError is executed if the asynchronous load fails.
       this.onError(e);
@@ -83,10 +93,12 @@ export class FlakaPlayer {
 
   pause(): void {
     this.videoElement.pause();
+    this.changeState(PlayerState.PAUSED);
   }
 
   resume(): void {
     this.videoElement.play();
+    this.changeState(PlayerState.PLAYING);
   }
 
   seek(time: number): void {
