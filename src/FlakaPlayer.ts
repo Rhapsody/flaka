@@ -16,13 +16,15 @@ export class FlakaPlayer {
     this.logger = new Logger();
     this.videoElement = document.getElementById(id) as HTMLVideoElement;
 
+    console.log('Flaka player initialization');
+
     if (!this.videoElement) {
       this.videoElement = createVideoElement(id);
     }
 
     this.videoElement.addEventListener('timeupdate', (event: Event & { target: HTMLVideoElement }) => {
       const stats = this.player.getStats();
-      if (stats.playTime !== NaN) {
+      if (stats.playTime) {
         options.onLoggerChange({ playTime: stats.playTime, manifestLoadTime: stats.manifestTimeSeconds });
       }
       options.onTimeUpdate(event.target.currentTime);
