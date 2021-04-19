@@ -3,8 +3,6 @@ import { createVideoElement } from './helpers';
 import { Logger } from './Logger';
 import { FlakaPlayerOptions, PlayerState } from './types';
 
-log.setLevel(log.Level.DEBUG);
-
 export class FlakaPlayer {
   options: FlakaPlayerOptions;
   state: PlayerState = PlayerState.STOPPED;
@@ -15,6 +13,7 @@ export class FlakaPlayer {
   constructor(id: string, options: FlakaPlayerOptions) {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const _this = this;
+    log.setLevel(log.Level.DEBUG);
     this.options = options;
     this.logger = new Logger();
     this.videoElement = document.getElementById(id) as HTMLVideoElement;
