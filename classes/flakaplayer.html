@@ -86,13 +86,16 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="flakaplayer.html#options" class="tsd-kind-icon">options</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="flakaplayer.html#player" class="tsd-kind-icon">player</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="flakaplayer.html#state" class="tsd-kind-icon">state</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="flakaplayer.html#videoelement" class="tsd-kind-icon">video<wbr>Element</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="flakaplayer.html#changestate" class="tsd-kind-icon">change<wbr>State</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="flakaplayer.html#initplayer" class="tsd-kind-icon">init<wbr>Player</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="flakaplayer.html#onerror" class="tsd-kind-icon">on<wbr>Error</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="flakaplayer.html#onerrorevent" class="tsd-kind-icon">on<wbr>Error<wbr>Event</a></li>
@@ -117,7 +120,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Rhapsody/flaka/blob/e15f169/src/FlakaPlayer.ts#L7">FlakaPlayer.ts:7</a></li>
+									<li>Defined in <a href="https://github.com/Rhapsody/flaka/blob/edd33f2/src/FlakaPlayer.ts#L9">FlakaPlayer.ts:9</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -137,12 +140,32 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="options" class="tsd-anchor"></a>
+					<h3>options</h3>
+					<div class="tsd-signature tsd-kind-icon">options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">FlakaPlayerOptions</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Rhapsody/flaka/blob/edd33f2/src/FlakaPlayer.ts#L6">FlakaPlayer.ts:6</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="player" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> player</h3>
 					<div class="tsd-signature tsd-kind-icon">player<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Player</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Rhapsody/flaka/blob/e15f169/src/FlakaPlayer.ts#L6">FlakaPlayer.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/Rhapsody/flaka/blob/edd33f2/src/FlakaPlayer.ts#L8">FlakaPlayer.ts:8</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="state" class="tsd-anchor"></a>
+					<h3>state</h3>
+					<div class="tsd-signature tsd-kind-icon">state<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">PlayerState</span><span class="tsd-signature-symbol"> = ...</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Rhapsody/flaka/blob/edd33f2/src/FlakaPlayer.ts#L7">FlakaPlayer.ts:7</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -152,13 +175,36 @@
 					<div class="tsd-signature tsd-kind-icon">video<wbr>Element<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLVideoElement</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Rhapsody/flaka/blob/e15f169/src/FlakaPlayer.ts#L7">FlakaPlayer.ts:7</a></li>
+							<li>Defined in <a href="https://github.com/Rhapsody/flaka/blob/edd33f2/src/FlakaPlayer.ts#L9">FlakaPlayer.ts:9</a></li>
 						</ul>
 					</aside>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="changestate" class="tsd-anchor"></a>
+					<h3>change<wbr>State</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">change<wbr>State<span class="tsd-signature-symbol">(</span>newState<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PlayerState</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Rhapsody/flaka/blob/edd33f2/src/FlakaPlayer.ts#L51">FlakaPlayer.ts:51</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>newState: <span class="tsd-signature-type">PlayerState</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="initplayer" class="tsd-anchor"></a>
 					<h3>init<wbr>Player</h3>
@@ -169,7 +215,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Rhapsody/flaka/blob/e15f169/src/FlakaPlayer.ts#L32">FlakaPlayer.ts:32</a></li>
+									<li>Defined in <a href="https://github.com/Rhapsody/flaka/blob/edd33f2/src/FlakaPlayer.ts#L35">FlakaPlayer.ts:35</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -186,7 +232,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Rhapsody/flaka/blob/e15f169/src/FlakaPlayer.ts#L39">FlakaPlayer.ts:39</a></li>
+									<li>Defined in <a href="https://github.com/Rhapsody/flaka/blob/edd33f2/src/FlakaPlayer.ts#L42">FlakaPlayer.ts:42</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -209,7 +255,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Rhapsody/flaka/blob/e15f169/src/FlakaPlayer.ts#L44">FlakaPlayer.ts:44</a></li>
+									<li>Defined in <a href="https://github.com/Rhapsody/flaka/blob/edd33f2/src/FlakaPlayer.ts#L47">FlakaPlayer.ts:47</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -232,7 +278,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Rhapsody/flaka/blob/e15f169/src/FlakaPlayer.ts#L79">FlakaPlayer.ts:79</a></li>
+									<li>Defined in <a href="https://github.com/Rhapsody/flaka/blob/edd33f2/src/FlakaPlayer.ts#L94">FlakaPlayer.ts:94</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -249,7 +295,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Rhapsody/flaka/blob/e15f169/src/FlakaPlayer.ts#L48">FlakaPlayer.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/Rhapsody/flaka/blob/edd33f2/src/FlakaPlayer.ts#L58">FlakaPlayer.ts:58</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -283,7 +329,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Rhapsody/flaka/blob/e15f169/src/FlakaPlayer.ts#L83">FlakaPlayer.ts:83</a></li>
+									<li>Defined in <a href="https://github.com/Rhapsody/flaka/blob/edd33f2/src/FlakaPlayer.ts#L99">FlakaPlayer.ts:99</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -300,7 +346,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Rhapsody/flaka/blob/e15f169/src/FlakaPlayer.ts#L87">FlakaPlayer.ts:87</a></li>
+									<li>Defined in <a href="https://github.com/Rhapsody/flaka/blob/edd33f2/src/FlakaPlayer.ts#L104">FlakaPlayer.ts:104</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -334,10 +380,19 @@
 								<a href="flakaplayer.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="flakaplayer.html#options" class="tsd-kind-icon">options</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="flakaplayer.html#player" class="tsd-kind-icon">player</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="flakaplayer.html#state" class="tsd-kind-icon">state</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="flakaplayer.html#videoelement" class="tsd-kind-icon">video<wbr>Element</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="flakaplayer.html#changestate" class="tsd-kind-icon">change<wbr>State</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="flakaplayer.html#initplayer" class="tsd-kind-icon">init<wbr>Player</a>
