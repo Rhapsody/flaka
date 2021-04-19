@@ -1,4 +1,4 @@
-import { Player, polyfill, net, util, extern, log } from 'shaka-player';
+import { Player, polyfill, net, util, extern } from 'shaka-player';
 import { createVideoElement } from './helpers';
 import { Logger } from './Logger';
 import { FlakaPlayerOptions, PlayerState } from './types';
@@ -11,9 +11,6 @@ export class FlakaPlayer {
   logger: Logger;
 
   constructor(id: string, options: FlakaPlayerOptions) {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const _this = this;
-    log.setLevel(log.Level.DEBUG);
     this.options = options;
     this.logger = new Logger();
     this.videoElement = document.getElementById(id) as HTMLVideoElement;
@@ -26,6 +23,7 @@ export class FlakaPlayer {
       options.onTimeUpdate(event.target.currentTime);
       this.logger.addPlaybackTime(1);
       options.onLoggerChange(this.logger.playbackTime);
+      console.log(this.player.getStats());
     });
 
     this.videoElement.addEventListener('durationchange', (event: Event & { target: HTMLVideoElement }) => {
