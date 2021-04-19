@@ -1,12 +1,13 @@
 import { Player, polyfill, net, util, extern } from 'shaka-player';
 import { createVideoElement } from './helpers';
 import { Logger } from './Logger';
-import { FlakaPlayerOptions, PlayerState } from './types';
+import { FlakaPlayerOptions, PlayerState, Track } from './types';
 
 export class FlakaPlayer {
   options: FlakaPlayerOptions;
   state: PlayerState = PlayerState.STOPPED;
   player?: Player;
+  currentTrack?: Track;
   videoElement: HTMLVideoElement;
   logger: Logger;
 
@@ -21,9 +22,10 @@ export class FlakaPlayer {
 
     this.videoElement.addEventListener('timeupdate', (event: Event & { target: HTMLVideoElement }) => {
       const stats = this.player.getStats();
+      if (stats.playTime !== NaN) {
+        options.onLoggerChange({ playTime: stats.playTime, manifestLoadTime: stats.manifestTimeSeconds });
+      }
       options.onTimeUpdate(event.target.currentTime);
-      this.logger.addPlaybackTime(1);
-      options.onLoggerChange({ playTime: stats.playTime, manifestLoadTime: stats.manifestTimeSeconds });
     });
 
     this.videoElement.addEventListener('durationchange', (event: Event & { target: HTMLVideoElement }) => {
@@ -62,7 +64,7 @@ export class FlakaPlayer {
     }
   }
 
-  async play(url: string, servers?: extern.DrmConfiguration['servers'], token?: string): Promise<void> {
+  async play(track: Track, servers?: extern.DrmConfiguration['servers'], token?: string): Promise<void> {
     this.player.resetConfiguration();
 
     if (servers) {
@@ -89,7 +91,13 @@ export class FlakaPlayer {
         await this.options.validatePlayback();
       }
 
-      await this.player.load(url);
+      await this.player.load(track.url);
+
+      if (this.options.onTrackChange) {
+        this.options.onTrackChange(track);
+      }
+
+      this.currentTrack = track;
 
       this.changeState(PlayerState.PLAYING);
     } catch (e) {

@@ -6,10 +6,17 @@ Player.isBrowserSupported = () => true;
 polyfill.installAll = () => {};
 
 import { FlakaPlayer } from '../FlakaPlayer';
-import { PlayerState } from '../types';
+import { PlayerState, Track } from '../types';
 
 const TEST_PLAYER_ID = 'flaka-player-test';
 const TEST_MANIFEST_URL = 'https://test.com/manifest.mpd';
+
+const TEST_TRACK: Track = {
+  id: 'track.123',
+  name: 'test track',
+  artist: 'test artist',
+  url: TEST_MANIFEST_URL,
+};
 
 test('should create video element in the dom', () => {
   const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {});
@@ -35,7 +42,7 @@ test('should call validatePlayback before playing the track', () => {
 
   flakaPlayer.player.load = playerLoadMock;
 
-  flakaPlayer.play(TEST_MANIFEST_URL);
+  flakaPlayer.play(TEST_TRACK);
 
   expect(validatePlaybackMock).toBeCalled();
 });
@@ -50,7 +57,7 @@ test('should call validatePlayback and throw error if validatePlayback fails', (
 
   flakaPlayer.player.load = playerLoadMock;
 
-  expect(flakaPlayer.play(TEST_MANIFEST_URL)).rejects.toThrowError();
+  expect(flakaPlayer.play(TEST_TRACK)).rejects.toThrowError();
 });
 
 test('should call shaka-player load method with correct parameters on play', async () => {
@@ -59,9 +66,9 @@ test('should call shaka-player load method with correct parameters on play', asy
 
   flakaPlayer.player.load = playerLoadMock;
 
-  await flakaPlayer.play(TEST_MANIFEST_URL);
+  await flakaPlayer.play(TEST_TRACK);
 
-  expect(playerLoadMock).toBeCalledWith(TEST_MANIFEST_URL);
+  expect(playerLoadMock).toBeCalledWith(TEST_TRACK.url);
 });
 
 test('should trigger state change callback on play', async () => {
@@ -73,7 +80,7 @@ test('should trigger state change callback on play', async () => {
 
   flakaPlayer.player.load = playerLoadMock;
 
-  await flakaPlayer.play(TEST_MANIFEST_URL);
+  await flakaPlayer.play(TEST_TRACK);
 
   expect(onStateChangeMock).toBeCalledWith(PlayerState.PLAYING);
 });
