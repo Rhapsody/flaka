@@ -20,10 +20,10 @@ export class FlakaPlayer {
     }
 
     this.videoElement.addEventListener('timeupdate', (event: Event & { target: HTMLVideoElement }) => {
+      const stats = this.player.getStats();
       options.onTimeUpdate(event.target.currentTime);
       this.logger.addPlaybackTime(1);
-      options.onLoggerChange(this.logger.playbackTime);
-      console.log(this.player.getStats());
+      options.onLoggerChange({ playTime: stats.playTime, manifestLoadTime: stats.manifestTimeSeconds });
     });
 
     this.videoElement.addEventListener('durationchange', (event: Event & { target: HTMLVideoElement }) => {

@@ -1836,6 +1836,7 @@ declare module 'shaka-player' {
       bufferingTime: number;
       switchHistory: TrackChoice[];
       stateHistory: StateChange[];
+      manifestTimeSeconds: number;
     }
 
     interface TrackChoice {
