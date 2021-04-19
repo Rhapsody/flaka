@@ -9,4 +9,5 @@ export interface FlakaPlayerOptions {
   onStateChange?: (state: PlayerState) => void;
   onTimeUpdate?: (duration) => void;
   onDurationUpdate?: (duration) => void;
+  onLoggerChange?: (playbackTime) => void;
 }
