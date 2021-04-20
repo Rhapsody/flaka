@@ -16,8 +16,6 @@ export class FlakaPlayer {
     this.logger = new Logger();
     this.videoElement = document.getElementById(id) as HTMLVideoElement;
 
-    console.log('Flaka player initialization');
-
     if (!this.videoElement) {
       this.videoElement = createVideoElement(id);
     }
@@ -103,10 +101,8 @@ export class FlakaPlayer {
 
       const stats = this.player.getStats();
 
-      console.log(stats);
-
       if (this.options.onManifestLoaded && stats.manifestTimeSeconds) {
-        this.options.onManifestLoaded(stats.manifestTimeSeconds);
+        this.options.onManifestLoaded(track.url, stats.manifestTimeSeconds);
       }
 
       this.changeState(PlayerState.PLAYING);
