@@ -56,7 +56,7 @@ export class FlakaPlayer {
   changeState(newState: PlayerState): void {
     this.state = newState;
     if (this.options.onStateChange) {
-      this.options.onStateChange(this.state);
+      this.options.onStateChange(this.state, this.currentTrack);
     }
   }
 
