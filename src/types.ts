@@ -4,11 +4,6 @@ export enum PlayerState {
   STOPPED = 'stopped',
 }
 
-export interface LoggerChangeParams {
-  playTime: number;
-  manifestLoadTime: number;
-}
-
 export interface Track {
   id: string;
   artist: string;
@@ -19,8 +14,9 @@ export interface Track {
 export interface FlakaPlayerOptions {
   validatePlayback?: () => Promise<void>;
   onStateChange?: (state: PlayerState) => void;
-  onTimeUpdate?: (duration) => void;
-  onDurationUpdate?: (duration) => void;
-  onLoggerChange?: (params: LoggerChangeParams) => void;
+  onTimeUpdate?: (duration: number) => void;
+  onDurationUpdate?: (duration: number) => void;
+  onManifestLoaded?: (time: number) => void;
+  onPlayTimeChange?: (time: number) => void;
   onTrackChange?: (track: Track) => void;
 }
