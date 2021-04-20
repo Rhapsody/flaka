@@ -21,10 +21,6 @@ export class FlakaPlayer {
     }
 
     this.videoElement.addEventListener('timeupdate', (event: Event & { target: HTMLVideoElement }) => {
-      const stats = this.player.getStats();
-      if (stats.playTime) {
-        options.onPlayTimeChange(stats.playTime);
-      }
       options.onTimeUpdate(event.target.currentTime);
     });
 
@@ -91,6 +87,12 @@ export class FlakaPlayer {
         await this.options.validatePlayback();
       }
 
+      let stats = this.player.getStats();
+
+      if (this.options.reportPlayTime && stats.playTime) {
+        this.options.reportPlayTime(this.currentTrack, stats.playTime);
+      }
+
       await this.player.load(track.url);
 
       this.currentTrack = track;
@@ -99,10 +101,10 @@ export class FlakaPlayer {
         this.options.onTrackChange(track);
       }
 
-      const stats = this.player.getStats();
+      stats = this.player.getStats();
 
-      if (this.options.onManifestLoaded && stats.manifestTimeSeconds) {
-        this.options.onManifestLoaded(track.url, stats.manifestTimeSeconds);
+      if (this.options.reportManifestLoadedTime && stats.manifestTimeSeconds) {
+        this.options.reportManifestLoadedTime(track, stats.manifestTimeSeconds);
       }
 
       this.changeState(PlayerState.PLAYING);
