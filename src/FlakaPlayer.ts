@@ -103,6 +103,8 @@ export class FlakaPlayer {
 
       const stats = this.player.getStats();
 
+      console.log(stats);
+
       if (this.options.onManifestLoaded && stats.manifestTimeSeconds) {
         this.options.onManifestLoaded(stats.manifestTimeSeconds);
       }
