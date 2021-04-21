@@ -10,7 +10,8 @@
     "install": "npm run build",
     "lint": "eslint 'src' --ext .ts --fix",
     "test": "jest",
-    "test-watch": "jest --watchAll"
+    "test-watch": "jest --watchAll",
+    "test-coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",

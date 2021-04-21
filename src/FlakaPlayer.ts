@@ -1,11 +1,12 @@
 import { Player, polyfill, net, util, extern } from 'shaka-player';
+import { defaultPlayerState } from './constants';
 import { createVideoElement } from './helpers';
 import { Logger } from './Logger';
-import { FlakaPlayerOptions, PlayerState, Track } from './types';
+import { FlakaPlayerOptions, PlayerState, PlayState, Track } from './types';
 
 export class FlakaPlayer {
   options: FlakaPlayerOptions;
-  state: PlayerState = PlayerState.STOPPED;
+  state = defaultPlayerState;
   player?: Player;
   currentTrack?: Track;
   videoElement: HTMLVideoElement;
@@ -107,7 +108,7 @@ export class FlakaPlayer {
         this.options.reportManifestLoadedTime(track, stats.manifestTimeSeconds);
       }
 
-      this.changeState(PlayerState.PLAYING);
+      this.changeState({ ...this.state, playState: PlayState.PLAYING });
     } catch (e) {
       // onError is executed if the asynchronous load fails.
       this.onError(e);
@@ -116,15 +117,20 @@ export class FlakaPlayer {
 
   pause(): void {
     this.videoElement.pause();
-    this.changeState(PlayerState.PAUSED);
+    this.changeState({ ...this.state, playState: PlayState.PAUSED });
   }
 
   resume(): void {
     this.videoElement.play();
-    this.changeState(PlayerState.PLAYING);
+    this.changeState({ ...this.state, playState: PlayState.PLAYING });
   }
 
   seek(time: number): void {
     this.videoElement.currentTime = time;
+  }
+
+  setVolume(volume: number): void {
+    this.videoElement.volume = volume;
+    this.changeState({ ...this.state, volume });
   }
 }

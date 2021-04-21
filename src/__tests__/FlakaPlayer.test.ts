@@ -1,4 +1,5 @@
 import { Player, polyfill } from 'shaka-player';
+import { defaultPlayerState } from '../constants';
 
 window.addEventListener = jest.fn();
 Player.isBrowserSupported = () => true;
@@ -6,7 +7,7 @@ Player.isBrowserSupported = () => true;
 polyfill.installAll = () => {};
 
 import { FlakaPlayer } from '../FlakaPlayer';
-import { PlayerState, Track } from '../types';
+import { PlayState, Track } from '../types';
 
 const TEST_PLAYER_ID = 'flaka-player-test';
 const TEST_MANIFEST_URL = 'https://test.com/manifest.mpd';
@@ -82,7 +83,7 @@ test('should trigger state change callback on play', async () => {
 
   await flakaPlayer.play(TEST_TRACK);
 
-  expect(onStateChangeMock).toBeCalledWith(PlayerState.PLAYING);
+  expect(onStateChangeMock).toBeCalledWith({ ...defaultPlayerState, playState: PlayState.PLAYING }, TEST_TRACK);
 });
 
 test('should pause track', () => {
@@ -103,7 +104,7 @@ test('should trigger state change callback on pause', async () => {
 
   flakaPlayer.pause();
 
-  expect(onStateChangeMock).toBeCalledWith(PlayerState.PAUSED);
+  expect(onStateChangeMock).toBeCalledWith({ ...defaultPlayerState, playState: PlayState.PAUSED }, undefined);
 });
 
 test('should resume track', () => {
@@ -123,7 +124,7 @@ test('should trigger state change callback on resume', async () => {
   });
   flakaPlayer.resume();
 
-  expect(onStateChangeMock).toBeCalledWith(PlayerState.PLAYING);
+  expect(onStateChangeMock).toBeCalledWith({ ...defaultPlayerState, playState: PlayState.PLAYING }, undefined);
 });
 
 test('should seek track', () => {
@@ -133,4 +134,23 @@ test('should seek track', () => {
   flakaPlayer.seek(seekTime);
 
   expect(flakaPlayer.videoElement.currentTime).toStrictEqual(seekTime);
+});
+
+test('should handle volume change', () => {
+  const volume = 0.23;
+  const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {});
+
+  flakaPlayer.setVolume(volume);
+
+  expect(flakaPlayer.videoElement.volume).toStrictEqual(volume);
+});
+
+test('should trigger state change on volume change', () => {
+  const onStateChangeMock = jest.fn();
+  const volume = 0.23;
+  const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, { onStateChange: onStateChangeMock });
+
+  flakaPlayer.setVolume(volume);
+
+  expect(onStateChangeMock).toBeCalledWith({ ...defaultPlayerState, volume }, undefined);
 });

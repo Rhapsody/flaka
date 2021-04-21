@@ -1,7 +1,13 @@
-export enum PlayerState {
+export enum PlayState {
   PLAYING = 'playing',
   PAUSED = 'paused',
   STOPPED = 'stopped',
+}
+
+export interface PlayerState {
+  playState: PlayState;
+  volume: number;
+  duration?: number;
 }
 
 export interface Track {
