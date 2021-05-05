@@ -130,6 +130,7 @@ export class FlakaPlayer {
   }
 
   pause(): void {
+    console.log('PAUSE');
     this.videoElement.pause();
     this.changeState({ ...this.state, playState: PlayState.PAUSED });
   }
