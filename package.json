@@ -12,7 +12,7 @@
     "test": "jest",
     "test:watch": "jest --watchAll",
     "test:coverage": "jest --coverage",
-    "test:staged": "jest --bail --coverage --findRelatedTests"
+    "test:staged": "jest --bail --findRelatedTests"
   },
   "repository": {
     "type": "git",
@@ -47,7 +47,7 @@
     "src/**/*.ts": [
       "eslint src/**/*.ts --fix",
       "bash -c tsc --noEmit",
-      "jest --bail --coverage --findRelatedTests"
+      "jest --bail --findRelatedTests"
     ]
   },
   "publishConfig": {
