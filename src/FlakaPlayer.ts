@@ -26,7 +26,7 @@ export class FlakaPlayer {
     });
 
     this.videoElement.addEventListener('durationchange', (event: Event & { target: HTMLVideoElement }) => {
-      options.onDurationUpdate(event.target.duration);
+      this.changeState({ ...this.state, duration: event.target.duration });
     });
 
     // Check to see if the browser supports the basic APIs Shaka needs.
@@ -51,6 +51,9 @@ export class FlakaPlayer {
   }
 
   onErrorEvent(event: Player.ErrorEvent): void {
+    this.logger.log('error', {
+      description: event.detail.message,
+    });
     this.onError(event.detail);
   }
 
@@ -90,6 +93,11 @@ export class FlakaPlayer {
 
       let stats = this.player.getStats();
 
+      this.logger.log('playbackTime', {
+        trackId: this.currentTrack.id,
+        time: stats.playTime,
+      });
+
       if (this.options.reportPlayTime && stats.playTime) {
         this.options.reportPlayTime(this.currentTrack, stats.playTime);
       }
@@ -103,6 +111,11 @@ export class FlakaPlayer {
       }
 
       stats = this.player.getStats();
+
+      this.logger.log('manifestLoadTime', {
+        trackId: this.currentTrack.id,
+        time: stats.manifestTimeSeconds,
+      });
 
       if (this.options.reportManifestLoadedTime && stats.manifestTimeSeconds) {
         this.options.reportManifestLoadedTime(track, stats.manifestTimeSeconds);

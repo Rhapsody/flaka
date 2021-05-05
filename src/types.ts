@@ -21,8 +21,7 @@ export interface FlakaPlayerOptions {
   validatePlayback?: () => Promise<void>;
   onStateChange?: (state: PlayerState, track: Track) => void;
   onTimeUpdate?: (duration: number) => void;
-  onDurationUpdate?: (duration: number) => void;
+  onTrackChange?: (track: Track) => void;
   reportManifestLoadedTime?: (track: Track, time: number) => void;
   reportPlayTime?: (track: Track, time: number) => void;
-  onTrackChange?: (track: Track) => void;
 }

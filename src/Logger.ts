@@ -1,9 +1,14 @@
-export class Logger {
-  playbackTime: 0;
-  playbackTimeStarted: number;
+type LogEventName = 'manifestLoadTime' | 'playbackTime' | 'error';
 
-  addPlaybackTime(amount: number): void {
-    this.playbackTimeStarted = Date.now();
-    this.playbackTime += amount;
-  }
+type LogEventData = {
+  time?: number;
+  description?: string;
+  trackId?: string;
+};
+
+export class Logger {
+  log = (eventName: LogEventName, eventData: LogEventData) => {
+    console.log('Reporting event: ', eventName);
+    console.log('Event data: ', eventData);
+  };
 }
