@@ -52,6 +52,7 @@ export class FlakaPlayer {
 
   onErrorEvent(event: Player.ErrorEvent): void {
     this.logger.log('error', {
+      trackId: this.currentTrack?.id,
       description: event.detail.message,
     });
     this.onError(event.detail);
@@ -94,7 +95,7 @@ export class FlakaPlayer {
       let stats = this.player.getStats();
 
       this.logger.log('playbackTime', {
-        trackId: this.currentTrack.id,
+        trackId: this.currentTrack?.id,
         time: stats.playTime,
       });
 
@@ -113,7 +114,7 @@ export class FlakaPlayer {
       stats = this.player.getStats();
 
       this.logger.log('manifestLoadTime', {
-        trackId: this.currentTrack.id,
+        trackId: this.currentTrack?.id,
         time: stats.manifestTimeSeconds,
       });
 
