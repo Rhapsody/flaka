@@ -23,6 +23,7 @@ export class FlakaPlayer {
 
     this.videoElement.addEventListener('timeupdate', (event: Event & { target: HTMLVideoElement }) => {
       options.onTimeUpdate(event.target.currentTime);
+      console.log(event.target.currentTime);
     });
 
     this.videoElement.addEventListener('durationchange', (event: Event & { target: HTMLVideoElement }) => {
