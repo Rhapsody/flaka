@@ -5,6 +5,7 @@ export enum PlayState {
 }
 
 export interface PlayerState {
+  loading: boolean;
   playState: PlayState;
   volume: number;
   duration?: number;
