@@ -30,24 +30,6 @@ export class FlakaPlayer {
       this.changeState({ ...this.state, duration: event.target.duration });
     });
 
-    this.videoElement.addEventListener('loadstart', () => {
-      debugger;
-      this.changeState({ ...this.state, loading: true });
-    });
-
-    this.videoElement.addEventListener('waiting', () => {
-      debugger;
-    });
-
-    this.videoElement.addEventListener('loadeddata', () => {
-      debugger;
-      this.changeState({ ...this.state, loading: false });
-    });
-
-    this.videoElement.addEventListener('progress', () => {
-      debugger;
-    });
-
     // Check to see if the browser supports the basic APIs Shaka needs.
     if (Player.isBrowserSupported()) {
       polyfill.installAll();
@@ -81,17 +63,14 @@ export class FlakaPlayer {
   }
 
   onBufferingChange(event: Player.BufferingEvent): void {
-    debugger;
-    this.changeState({ ...this.state, buffering: event.buffering });
+    this.changeState({ ...this.state, loading: event.buffering });
   }
 
   onLoading(): void {
-    debugger;
     this.changeState({ ...this.state, loading: true });
   }
 
   onLoaded(): void {
-    debugger;
     this.changeState({ ...this.state, loading: false });
   }
 
