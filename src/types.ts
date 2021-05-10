@@ -8,6 +8,7 @@ export interface PlayerState {
   playState: PlayState;
   volume: number;
   duration?: number;
+  buffering?: boolean;
 }
 
 export interface Track {

@@ -44,6 +44,7 @@ export class FlakaPlayer {
 
     // Listen for error events.
     this.player.addEventListener('error', this.onErrorEvent);
+    this.player.addEventListener('buffering', this.onBufferingChange);
   }
 
   onError(error: util.Error): void {
@@ -57,6 +58,10 @@ export class FlakaPlayer {
       description: event.detail.message,
     });
     this.onError(event.detail);
+  }
+
+  onBufferingChange(event: Player.BufferingEvent): void {
+    this.changeState({ ...this.state, buffering: event.buffering });
   }
 
   changeState(newState: PlayerState): void {
