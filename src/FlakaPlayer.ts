@@ -67,21 +67,6 @@ export class FlakaPlayer {
     this.onError(event.detail);
   }
 
-  // onBufferingChange(event: Player.BufferingEvent): void {
-  //   console.log('EVENT STATE:', { ...this.state, loading: event.buffering });
-  //   this.changeState({ ...this.state, loading: event.buffering });
-  // }
-
-  // onLoading(): void {
-  //   console.log('EVENT STATE:', { ...this.state, loading: true });
-  //   this.changeState({ ...this.state, loading: true });
-  // }
-
-  // onLoaded(): void {
-  //   console.log('EVENT STATE:', { ...this.state, loading: false });
-  //   this.changeState({ ...this.state, loading: false });
-  // }
-
   changeState(newState: PlayerState): void {
     console.log(newState);
     this.state = newState;
