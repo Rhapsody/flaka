@@ -23,7 +23,6 @@ export class FlakaPlayer {
 
     this.videoElement.addEventListener('timeupdate', (event: Event & { target: HTMLVideoElement }) => {
       options.onTimeUpdate(event.target.currentTime);
-      console.log(event.target.currentTime);
     });
 
     this.videoElement.addEventListener('durationchange', (event: Event & { target: HTMLVideoElement }) => {
@@ -44,9 +43,15 @@ export class FlakaPlayer {
 
     // Listen for error events.
     this.player.addEventListener('error', this.onErrorEvent);
-    this.player.addEventListener('buffering', this.onBufferingChange);
-    this.player.addEventListener('loading', this.onLoading);
-    this.player.addEventListener('loaded', this.onLoaded);
+    this.player.addEventListener('buffering', (event) => {
+      this.changeState({ ...this.state, loading: event.buffering });
+    });
+    this.player.addEventListener('loading', () => {
+      this.changeState({ ...this.state, loading: true });
+    });
+    this.player.addEventListener('loaded', () => {
+      this.changeState({ ...this.state, loading: false });
+    });
   }
 
   onError(error: util.Error): void {
@@ -62,20 +67,20 @@ export class FlakaPlayer {
     this.onError(event.detail);
   }
 
-  onBufferingChange(event: Player.BufferingEvent): void {
-    console.log('EVENT STATE:', { ...this.state, loading: event.buffering });
-    this.changeState({ ...this.state, loading: event.buffering });
-  }
+  // onBufferingChange(event: Player.BufferingEvent): void {
+  //   console.log('EVENT STATE:', { ...this.state, loading: event.buffering });
+  //   this.changeState({ ...this.state, loading: event.buffering });
+  // }
 
-  onLoading(): void {
-    console.log('EVENT STATE:', { ...this.state, loading: true });
-    this.changeState({ ...this.state, loading: true });
-  }
+  // onLoading(): void {
+  //   console.log('EVENT STATE:', { ...this.state, loading: true });
+  //   this.changeState({ ...this.state, loading: true });
+  // }
 
-  onLoaded(): void {
-    console.log('EVENT STATE:', { ...this.state, loading: false });
-    this.changeState({ ...this.state, loading: false });
-  }
+  // onLoaded(): void {
+  //   console.log('EVENT STATE:', { ...this.state, loading: false });
+  //   this.changeState({ ...this.state, loading: false });
+  // }
 
   changeState(newState: PlayerState): void {
     console.log(newState);
