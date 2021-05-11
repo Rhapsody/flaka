@@ -29,6 +29,11 @@ export class FlakaPlayer {
       this.changeState({ ...this.state, duration: event.target.duration });
     });
 
+    this.videoElement.addEventListener('ended', () => {
+      this.changeState({ ...this.state, playState: PlayState.STOPPED });
+      options.onTrackEnded();
+    });
+
     // Check to see if the browser supports the basic APIs Shaka needs.
     if (Player.isBrowserSupported()) {
       polyfill.installAll();
