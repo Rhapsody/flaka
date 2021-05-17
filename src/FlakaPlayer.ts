@@ -21,12 +21,13 @@ export class FlakaPlayer {
       this.videoElement = createVideoElement(id);
     }
 
-    this.videoElement.setAttribute('height', '0');
-    this.videoElement.setAttribute('width', '0');
-    this.videoElement.setAttribute('style', 'position: absolute;');
-
     this.videoElement.addEventListener('timeupdate', (event: Event & { target: HTMLVideoElement }) => {
       options.onTimeUpdate(event.target.currentTime);
+    });
+
+    this.videoElement.addEventListener('error', (event) => {
+      console.error(event);
+      this.options.onError(event.message);
     });
 
     this.videoElement.addEventListener('durationchange', (event: Event & { target: HTMLVideoElement }) => {
@@ -52,8 +53,8 @@ export class FlakaPlayer {
 
     // Listen for error events.
     this.player.addEventListener('error', (event) => {
-      debugger;
       this.onErrorEvent(event);
+      this.options.onError(event.detail.message);
     });
     this.player.addEventListener('buffering', (event) => {
       this.changeState({ ...this.state, loading: event.buffering });

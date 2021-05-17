@@ -25,6 +25,7 @@ export interface FlakaPlayerOptions {
   onTimeUpdate?: (duration: number) => void;
   onTrackChange?: (track: Track) => void;
   onTrackEnded?: () => void;
+  onError?: (message: string) => void;
   reportManifestLoadedTime?: (track: Track, time: number) => void;
   reportPlayTime?: (track: Track, time: number) => void;
 }
