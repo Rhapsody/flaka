@@ -51,7 +51,9 @@ export class FlakaPlayer {
     this.player = new Player(this.videoElement);
 
     // Listen for error events.
-    this.player.addEventListener('error', this.onErrorEvent);
+    this.player.addEventListener('error', (event) => {
+      this.onErrorEvent(event);
+    });
     this.player.addEventListener('buffering', (event) => {
       this.changeState({ ...this.state, loading: event.buffering });
     });
