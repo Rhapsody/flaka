@@ -67,6 +67,7 @@ export class FlakaPlayer {
   }
 
   onErrorEvent(event: Player.ErrorEvent): void {
+    debugger;
     this.logger.log('error', {
       trackId: this.currentTrack?.id,
       description: event.detail.message,
