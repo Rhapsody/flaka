@@ -52,6 +52,7 @@ export class FlakaPlayer {
 
     // Listen for error events.
     this.player.addEventListener('error', (event) => {
+      debugger;
       this.onErrorEvent(event);
     });
     this.player.addEventListener('buffering', (event) => {
@@ -108,6 +109,11 @@ export class FlakaPlayer {
           }
         });
       }
+
+      this.player.getNetworkingEngine().registerResponseFilter(function (type, response) {
+        console.log(type);
+        console.log(response);
+      });
 
       // validate playback
       if (this.options.validatePlayback) {
