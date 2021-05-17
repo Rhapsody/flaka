@@ -90,8 +90,6 @@ export class FlakaPlayer {
 
   async play(track: Track, servers?: extern.DrmConfiguration['servers'], token?: string): Promise<void> {
     this.player.resetConfiguration();
-    this.player.detach();
-    this.player.attach(this.videoElement);
     // Try to load a manifest.
     // This is an asynchronous process.
     try {
@@ -110,11 +108,6 @@ export class FlakaPlayer {
           }
         });
       }
-
-      this.player.getNetworkingEngine().registerResponseFilter(function (type, response) {
-        console.log(type);
-        console.log(response);
-      });
 
       // validate playback
       if (this.options.validatePlayback) {
