@@ -84,12 +84,12 @@ export class FlakaPlayer {
   }
 
   async play(track: Track, servers?: extern.DrmConfiguration['servers'], token?: string): Promise<void> {
-    debugger;
     this.player.resetConfiguration();
 
     // Try to load a manifest.
     // This is an asynchronous process.
     try {
+      debugger;
       if (servers) {
         this.player.configure({
           drm: {
@@ -97,6 +97,7 @@ export class FlakaPlayer {
           },
         });
       }
+      debugger;
 
       if (token) {
         this.player.getNetworkingEngine().registerRequestFilter(function (type, request) {
@@ -105,13 +106,14 @@ export class FlakaPlayer {
           }
         });
       }
+      debugger;
       // validate playback
       if (this.options.validatePlayback) {
         await this.options.validatePlayback();
       }
 
       let stats = this.player.getStats();
-
+      debugger;
       this.logger.log('playbackTime', {
         trackId: this.currentTrack?.id,
         time: stats.playTime,
@@ -120,7 +122,7 @@ export class FlakaPlayer {
       if (this.options.reportPlayTime && stats.playTime) {
         this.options.reportPlayTime(this.currentTrack, stats.playTime);
       }
-
+      debugger;
       await this.player.load(track.url);
 
       this.currentTrack = track;
