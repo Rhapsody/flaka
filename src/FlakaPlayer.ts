@@ -85,7 +85,8 @@ export class FlakaPlayer {
 
   async play(track: Track, servers?: extern.DrmConfiguration['servers'], token?: string): Promise<void> {
     this.player.resetConfiguration();
-
+    this.player.detach();
+    this.player.attach(this.videoElement);
     // Try to load a manifest.
     // This is an asynchronous process.
     try {
