@@ -5,6 +5,7 @@ import { Logger } from './Logger';
 import { FlakaPlayerOptions, PlayerState, PlayState, Track } from './types';
 
 export class FlakaPlayer {
+  id: string;
   options: FlakaPlayerOptions;
   state = defaultPlayerState;
   player?: Player;
@@ -13,6 +14,7 @@ export class FlakaPlayer {
   logger: Logger;
 
   constructor(id: string, options: FlakaPlayerOptions) {
+    this.id = id;
     this.options = options;
     this.logger = new Logger();
     this.videoElement = document.getElementById(id) as HTMLVideoElement;
@@ -49,7 +51,12 @@ export class FlakaPlayer {
   }
 
   initPlayer(): void {
-    this.player = new Player(this.videoElement);
+    const videoElement = document.getElementById(this.id) as HTMLVideoElement;
+    if (videoElement) {
+      this.player = new Player(videoElement);
+    } else {
+      throw new Error('Video element does not exist');
+    }
 
     // Listen for error events.
     this.player.addEventListener('error', (event) => {
