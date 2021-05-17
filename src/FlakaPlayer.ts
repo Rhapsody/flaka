@@ -21,7 +21,8 @@ export class FlakaPlayer {
       this.videoElement = createVideoElement(id);
     }
 
-    this.videoElement.setAttribute('style', 'display: none;');
+    this.videoElement.setAttribute('height', '0');
+    this.videoElement.setAttribute('width', '0');
 
     this.videoElement.addEventListener('timeupdate', (event: Event & { target: HTMLVideoElement }) => {
       options.onTimeUpdate(event.target.currentTime);
