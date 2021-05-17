@@ -23,6 +23,7 @@ export class FlakaPlayer {
 
     this.videoElement.setAttribute('height', '0');
     this.videoElement.setAttribute('width', '0');
+    this.videoElement.setAttribute('style', 'position: absolute;');
 
     this.videoElement.addEventListener('timeupdate', (event: Event & { target: HTMLVideoElement }) => {
       options.onTimeUpdate(event.target.currentTime);
@@ -68,7 +69,6 @@ export class FlakaPlayer {
   }
 
   onErrorEvent(event: Player.ErrorEvent): void {
-    debugger;
     this.logger.log('error', {
       trackId: this.currentTrack?.id,
       description: event.detail.message,
@@ -91,7 +91,6 @@ export class FlakaPlayer {
     // Try to load a manifest.
     // This is an asynchronous process.
     try {
-      debugger;
       if (servers) {
         this.player.configure({
           drm: {
@@ -99,7 +98,6 @@ export class FlakaPlayer {
           },
         });
       }
-      debugger;
 
       if (token) {
         this.player.getNetworkingEngine().registerRequestFilter(function (type, request) {
@@ -108,14 +106,14 @@ export class FlakaPlayer {
           }
         });
       }
-      debugger;
+
       // validate playback
       if (this.options.validatePlayback) {
         await this.options.validatePlayback();
       }
 
       let stats = this.player.getStats();
-      debugger;
+
       this.logger.log('playbackTime', {
         trackId: this.currentTrack?.id,
         time: stats.playTime,
@@ -124,7 +122,7 @@ export class FlakaPlayer {
       if (this.options.reportPlayTime && stats.playTime) {
         this.options.reportPlayTime(this.currentTrack, stats.playTime);
       }
-      debugger;
+
       await this.player.load(track.url);
 
       this.currentTrack = track;
@@ -147,7 +145,6 @@ export class FlakaPlayer {
       this.changeState({ ...this.state, playState: PlayState.PLAYING });
     } catch (e) {
       // onError is executed if the asynchronous load fails.
-      debugger;
       this.onError(e);
     }
   }
