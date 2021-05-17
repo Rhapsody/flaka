@@ -84,27 +84,27 @@ export class FlakaPlayer {
   }
 
   async play(track: Track, servers?: extern.DrmConfiguration['servers'], token?: string): Promise<void> {
+    debugger;
     this.player.resetConfiguration();
-
-    if (servers) {
-      this.player.configure({
-        drm: {
-          servers,
-        },
-      });
-    }
-
-    if (token) {
-      this.player.getNetworkingEngine().registerRequestFilter(function (type, request) {
-        if (type === net.NetworkingEngine.RequestType.LICENSE) {
-          request.headers['customdata'] = token;
-        }
-      });
-    }
 
     // Try to load a manifest.
     // This is an asynchronous process.
     try {
+      if (servers) {
+        this.player.configure({
+          drm: {
+            servers,
+          },
+        });
+      }
+
+      if (token) {
+        this.player.getNetworkingEngine().registerRequestFilter(function (type, request) {
+          if (type === net.NetworkingEngine.RequestType.LICENSE) {
+            request.headers['customdata'] = token;
+          }
+        });
+      }
       // validate playback
       if (this.options.validatePlayback) {
         await this.options.validatePlayback();
@@ -143,6 +143,7 @@ export class FlakaPlayer {
       this.changeState({ ...this.state, playState: PlayState.PLAYING });
     } catch (e) {
       // onError is executed if the asynchronous load fails.
+      debugger;
       this.onError(e);
     }
   }
