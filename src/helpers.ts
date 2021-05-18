@@ -4,7 +4,7 @@ export const createVideoElement = (id: string): HTMLVideoElement => {
   videoElement.autoplay = true;
   videoElement.height = 0;
   videoElement.width = 0;
-  videoElement.setAttribute('style', 'position: absolue;');
+  videoElement.setAttribute('style', 'position: absolute;');
 
   document.body.appendChild(videoElement);
 
