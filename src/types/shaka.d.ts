@@ -964,6 +964,8 @@ declare module 'shaka-player' {
       unregisterResponseFilter(filter: extern.ResponseFilter): void;
 
       destroy(): Promise<unknown>;
+
+      setForceHTTPS(force: boolean): void;
     }
   }
 

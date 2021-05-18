@@ -73,7 +73,9 @@ export class FlakaPlayer {
   onError(error: util.Error): void {
     // Log the error.
     console.error('Error code', error.code, 'object', error);
-    this.options.onError(error.message);
+    if (this.options.onError) {
+      this.options.onError(error.message);
+    }
   }
 
   onErrorEvent(event: Player.ErrorEvent): void {
@@ -100,7 +102,6 @@ export class FlakaPlayer {
       this.player.getNetworkingEngine().clearAllResponseFilters();
 
       if (servers) {
-        debugger;
         this.player.configure({
           drm: {
             servers,
@@ -109,9 +110,9 @@ export class FlakaPlayer {
       }
 
       if (token) {
-        debugger;
         this.player.getNetworkingEngine().registerRequestFilter(function (type, request) {
           if (type === net.NetworkingEngine.RequestType.LICENSE) {
+            debugger;
             request.headers['customdata'] = token;
           }
         });
