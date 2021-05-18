@@ -119,40 +119,40 @@ export class FlakaPlayer {
         });
       }
 
-      // validate playback
-      if (this.options.validatePlayback) {
-        await this.options.validatePlayback();
-      }
+      // // validate playback
+      // if (this.options.validatePlayback) {
+      //   await this.options.validatePlayback();
+      // }
 
-      let stats = this.player.getStats();
+      // let stats = this.player.getStats();
 
-      this.logger.log('playbackTime', {
-        trackId: this.currentTrack?.id,
-        time: stats.playTime,
-      });
+      // this.logger.log('playbackTime', {
+      //   trackId: this.currentTrack?.id,
+      //   time: stats.playTime,
+      // });
 
-      if (this.options.reportPlayTime && stats.playTime) {
-        this.options.reportPlayTime(this.currentTrack, stats.playTime);
-      }
+      // if (this.options.reportPlayTime && stats.playTime) {
+      //   this.options.reportPlayTime(this.currentTrack, stats.playTime);
+      // }
 
       await this.player.load(track.url);
 
       this.currentTrack = track;
 
-      if (this.options.onTrackChange) {
-        this.options.onTrackChange(track);
-      }
+      // if (this.options.onTrackChange) {
+      //   this.options.onTrackChange(track);
+      // }
 
-      stats = this.player.getStats();
+      // stats = this.player.getStats();
 
-      this.logger.log('manifestLoadTime', {
-        trackId: this.currentTrack?.id,
-        time: stats.manifestTimeSeconds,
-      });
+      // this.logger.log('manifestLoadTime', {
+      //   trackId: this.currentTrack?.id,
+      //   time: stats.manifestTimeSeconds,
+      // });
 
-      if (this.options.reportManifestLoadedTime && stats.manifestTimeSeconds) {
-        this.options.reportManifestLoadedTime(track, stats.manifestTimeSeconds);
-      }
+      // if (this.options.reportManifestLoadedTime && stats.manifestTimeSeconds) {
+      //   this.options.reportManifestLoadedTime(track, stats.manifestTimeSeconds);
+      // }
 
       this.changeState({ ...this.state, playState: PlayState.PLAYING });
     } catch (e) {
