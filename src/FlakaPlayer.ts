@@ -111,6 +111,7 @@ export class FlakaPlayer {
 
       if (token) {
         this.player.getNetworkingEngine().registerRequestFilter(function (type, request) {
+          console.log(type, request);
           if (type === net.NetworkingEngine.RequestType.LICENSE) {
             debugger;
             request.headers['customdata'] = token;
