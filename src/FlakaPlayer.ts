@@ -43,7 +43,7 @@ export class FlakaPlayer {
 
     // Check to see if the browser supports the basic APIs Shaka needs.
     if (Player.isBrowserSupported()) {
-      polyfill.installAll();
+      // polyfill.installAll();
       this.initPlayer();
     } else {
       throw new Error('Browser is not supported');
@@ -51,32 +51,29 @@ export class FlakaPlayer {
   }
 
   initPlayer(): void {
-    const videoElement = document.getElementById(this.id) as HTMLVideoElement;
-    if (videoElement) {
-      this.player = new Player(videoElement);
-    } else {
-      throw new Error('Video element does not exist');
-    }
+    const player = new Player(this.videoElement);
 
     // Listen for error events.
-    this.player.addEventListener('error', (event) => {
+    player.addEventListener('error', (event) => {
       this.onErrorEvent(event);
-      this.options.onError(event.detail.message);
     });
-    this.player.addEventListener('buffering', (event) => {
+    player.addEventListener('buffering', (event) => {
       this.changeState({ ...this.state, loading: event.buffering });
     });
-    this.player.addEventListener('loading', () => {
+    player.addEventListener('loading', () => {
       this.changeState({ ...this.state, loading: true });
     });
-    this.player.addEventListener('loaded', () => {
+    player.addEventListener('loaded', () => {
       this.changeState({ ...this.state, loading: false });
     });
+
+    this.player = player;
   }
 
   onError(error: util.Error): void {
     // Log the error.
     console.error('Error code', error.code, 'object', error);
+    this.options.onError(error.message);
   }
 
   onErrorEvent(event: Player.ErrorEvent): void {
@@ -88,7 +85,6 @@ export class FlakaPlayer {
   }
 
   changeState(newState: PlayerState): void {
-    console.log(newState);
     this.state = newState;
     if (this.options.onStateChange) {
       this.options.onStateChange(this.state, this.currentTrack);
@@ -100,7 +96,11 @@ export class FlakaPlayer {
     // Try to load a manifest.
     // This is an asynchronous process.
     try {
+      this.player.getNetworkingEngine().clearAllRequestFilters();
+      this.player.getNetworkingEngine().clearAllResponseFilters();
+
       if (servers) {
+        debugger;
         this.player.configure({
           drm: {
             servers,
@@ -109,6 +109,7 @@ export class FlakaPlayer {
       }
 
       if (token) {
+        debugger;
         this.player.getNetworkingEngine().registerRequestFilter(function (type, request) {
           if (type === net.NetworkingEngine.RequestType.LICENSE) {
             request.headers['customdata'] = token;
