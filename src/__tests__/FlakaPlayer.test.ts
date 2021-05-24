@@ -1,160 +1,156 @@
+import { Player, polyfill } from 'shaka-player';
+import { defaultPlayerState } from '../constants';
+
+window.addEventListener = jest.fn();
+Player.isBrowserSupported = () => true;
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+polyfill.installAll = () => {};
+
+import { FlakaPlayer } from '../FlakaPlayer';
+import { PlayState, Track } from '../types';
+
+const TEST_PLAYER_ID = 'flaka-player-test';
+const TEST_MANIFEST_URL = 'https://test.com/manifest.mpd';
+
+const TEST_TRACK: Track = {
+  id: 'track.123',
+  name: 'test track',
+  artist: 'test artist',
+  url: TEST_MANIFEST_URL,
+};
+
 test('should create video element in the dom', () => {
-  expect(true).toStrictEqual(true);
+  const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {});
+  const videoElement = document.getElementById(TEST_PLAYER_ID);
+
+  expect(videoElement).toBeInstanceOf(HTMLVideoElement);
+  expect(videoElement.id).toStrictEqual(TEST_PLAYER_ID);
 });
 
-// import { Player, polyfill } from 'shaka-player';
-// import { defaultPlayerState } from '../constants';
+test('should instance shaka-player', () => {
+  const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {});
 
-// window.addEventListener = jest.fn();
-// Player.isBrowserSupported = () => true;
-// // eslint-disable-next-line @typescript-eslint/no-empty-function
-// polyfill.installAll = () => {};
+  expect(flakaPlayer.player).toBeInstanceOf(Player);
+});
 
-// import { FlakaPlayer } from '../FlakaPlayer';
-// import { PlayState, Track } from '../types';
+test('should call validatePlayback before playing the track', () => {
+  const validatePlaybackMock = jest.fn(() => Promise.resolve());
+  const playerLoadMock = jest.fn();
 
-// const TEST_PLAYER_ID = 'flaka-player-test';
-// const TEST_MANIFEST_URL = 'https://test.com/manifest.mpd';
+  const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {
+    validatePlayback: validatePlaybackMock,
+  });
 
-// const TEST_TRACK: Track = {
-//   id: 'track.123',
-//   name: 'test track',
-//   artist: 'test artist',
-//   url: TEST_MANIFEST_URL,
-// };
+  flakaPlayer.player.load = playerLoadMock;
 
-// test('should create video element in the dom', () => {
-//   const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {});
-//   const videoElement = document.getElementById(TEST_PLAYER_ID);
+  flakaPlayer.play(TEST_TRACK);
 
-//   expect(videoElement).toBeInstanceOf(HTMLVideoElement);
-//   expect(videoElement.id).toStrictEqual(TEST_PLAYER_ID);
-// });
+  expect(validatePlaybackMock).toBeCalled();
+});
 
-// test('should instance shaka-player', () => {
-//   const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {});
+test('should call validatePlayback and throw error if validatePlayback fails', () => {
+  const validatePlaybackMock = jest.fn(() => Promise.reject());
+  const playerLoadMock = jest.fn();
 
-//   expect(flakaPlayer.player).toBeInstanceOf(Player);
-// });
+  const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {
+    validatePlayback: validatePlaybackMock,
+  });
 
-// test('should call validatePlayback before playing the track', () => {
-//   const validatePlaybackMock = jest.fn(() => Promise.resolve());
-//   const playerLoadMock = jest.fn();
+  flakaPlayer.player.load = playerLoadMock;
 
-//   const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {
-//     validatePlayback: validatePlaybackMock,
-//   });
+  expect(flakaPlayer.play(TEST_TRACK)).rejects.toThrowError();
+});
 
-//   flakaPlayer.player.load = playerLoadMock;
+test('should call shaka-player load method with correct parameters on play', async () => {
+  const playerLoadMock = jest.fn();
+  const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {});
 
-//   flakaPlayer.play(TEST_TRACK);
+  flakaPlayer.player.load = playerLoadMock;
 
-//   expect(validatePlaybackMock).toBeCalled();
-// });
+  await flakaPlayer.play(TEST_TRACK);
 
-// test('should call validatePlayback and throw error if validatePlayback fails', () => {
-//   const validatePlaybackMock = jest.fn(() => Promise.reject());
-//   const playerLoadMock = jest.fn();
+  expect(playerLoadMock).toBeCalledWith(TEST_TRACK.url);
+});
 
-//   const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {
-//     validatePlayback: validatePlaybackMock,
-//   });
+test('should trigger state change callback on play', async () => {
+  const onStateChangeMock = jest.fn();
+  const playerLoadMock = jest.fn();
+  const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {
+    onStateChange: onStateChangeMock,
+  });
 
-//   flakaPlayer.player.load = playerLoadMock;
+  flakaPlayer.player.load = playerLoadMock;
 
-//   expect(flakaPlayer.play(TEST_TRACK)).rejects.toThrowError();
-// });
+  await flakaPlayer.play(TEST_TRACK);
 
-// test('should call shaka-player load method with correct parameters on play', async () => {
-//   const playerLoadMock = jest.fn();
-//   const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {});
+  expect(onStateChangeMock).toBeCalledWith({ ...defaultPlayerState, playState: PlayState.PLAYING }, TEST_TRACK);
+});
 
-//   flakaPlayer.player.load = playerLoadMock;
+test('should pause track', () => {
+  const mock = jest.fn();
+  const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {});
+  flakaPlayer.videoElement.pause = mock;
 
-//   await flakaPlayer.play(TEST_TRACK);
+  flakaPlayer.pause();
 
-//   expect(playerLoadMock).toBeCalledWith(TEST_TRACK.url);
-// });
+  expect(mock).toBeCalled();
+});
 
-// test('should trigger state change callback on play', async () => {
-//   const onStateChangeMock = jest.fn();
-//   const playerLoadMock = jest.fn();
-//   const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {
-//     onStateChange: onStateChangeMock,
-//   });
+test('should trigger state change callback on pause', async () => {
+  const onStateChangeMock = jest.fn();
+  const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {
+    onStateChange: onStateChangeMock,
+  });
 
-//   flakaPlayer.player.load = playerLoadMock;
+  flakaPlayer.pause();
 
-//   await flakaPlayer.play(TEST_TRACK);
+  expect(onStateChangeMock).toBeCalledWith({ ...defaultPlayerState, playState: PlayState.PAUSED }, undefined);
+});
 
-//   expect(onStateChangeMock).toBeCalledWith({ ...defaultPlayerState, playState: PlayState.PLAYING }, TEST_TRACK);
-// });
+test('should resume track', () => {
+  const mock = jest.fn();
+  const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {});
+  flakaPlayer.videoElement.play = mock;
 
-// test('should pause track', () => {
-//   const mock = jest.fn();
-//   const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {});
-//   flakaPlayer.videoElement.pause = mock;
+  flakaPlayer.resume();
 
-//   flakaPlayer.pause();
+  expect(mock).toBeCalled();
+});
 
-//   expect(mock).toBeCalled();
-// });
+test('should trigger state change callback on resume', async () => {
+  const onStateChangeMock = jest.fn();
+  const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {
+    onStateChange: onStateChangeMock,
+  });
+  flakaPlayer.resume();
 
-// test('should trigger state change callback on pause', async () => {
-//   const onStateChangeMock = jest.fn();
-//   const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {
-//     onStateChange: onStateChangeMock,
-//   });
+  expect(onStateChangeMock).toBeCalledWith({ ...defaultPlayerState, playState: PlayState.PLAYING }, undefined);
+});
 
-//   flakaPlayer.pause();
+test('should seek track', () => {
+  const seekTime = 10;
+  const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {});
 
-//   expect(onStateChangeMock).toBeCalledWith({ ...defaultPlayerState, playState: PlayState.PAUSED }, undefined);
-// });
+  flakaPlayer.seek(seekTime);
 
-// test('should resume track', () => {
-//   const mock = jest.fn();
-//   const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {});
-//   flakaPlayer.videoElement.play = mock;
+  expect(flakaPlayer.videoElement.currentTime).toStrictEqual(seekTime);
+});
 
-//   flakaPlayer.resume();
+test('should handle volume change', () => {
+  const volume = 0.23;
+  const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {});
 
-//   expect(mock).toBeCalled();
-// });
+  flakaPlayer.setVolume(volume);
 
-// test('should trigger state change callback on resume', async () => {
-//   const onStateChangeMock = jest.fn();
-//   const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {
-//     onStateChange: onStateChangeMock,
-//   });
-//   flakaPlayer.resume();
+  expect(flakaPlayer.videoElement.volume).toStrictEqual(volume);
+});
 
-//   expect(onStateChangeMock).toBeCalledWith({ ...defaultPlayerState, playState: PlayState.PLAYING }, undefined);
-// });
+test('should trigger state change on volume change', () => {
+  const onStateChangeMock = jest.fn();
+  const volume = 0.23;
+  const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, { onStateChange: onStateChangeMock });
 
-// test('should seek track', () => {
-//   const seekTime = 10;
-//   const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {});
+  flakaPlayer.setVolume(volume);
 
-//   flakaPlayer.seek(seekTime);
-
-//   expect(flakaPlayer.videoElement.currentTime).toStrictEqual(seekTime);
-// });
-
-// test('should handle volume change', () => {
-//   const volume = 0.23;
-//   const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {});
-
-//   flakaPlayer.setVolume(volume);
-
-//   expect(flakaPlayer.videoElement.volume).toStrictEqual(volume);
-// });
-
-// test('should trigger state change on volume change', () => {
-//   const onStateChangeMock = jest.fn();
-//   const volume = 0.23;
-//   const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, { onStateChange: onStateChangeMock });
-
-//   flakaPlayer.setVolume(volume);
-
-//   expect(onStateChangeMock).toBeCalledWith({ ...defaultPlayerState, volume }, undefined);
-// });
+  expect(onStateChangeMock).toBeCalledWith({ ...defaultPlayerState, volume }, undefined);
+});
