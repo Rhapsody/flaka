@@ -17,6 +17,9 @@ const TEST_TRACK: Track = {
   name: 'test track',
   artist: 'test artist',
   url: TEST_MANIFEST_URL,
+  albumId: 'string',
+  album: 'string',
+  artistId: 'string',
 };
 
 test('should create video element in the dom', () => {

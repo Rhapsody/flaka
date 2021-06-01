@@ -17,6 +17,9 @@ export interface Track {
   artist: string;
   name: string;
   url: string;
+  albumId: string;
+  album: string;
+  artistId: string;
 }
 
 export interface FlakaPlayerOptions {
