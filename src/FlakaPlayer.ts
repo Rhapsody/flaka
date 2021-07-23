@@ -175,4 +175,8 @@ export class FlakaPlayer {
     this.videoElement.volume = volume;
     this.changeState({ ...this.state, volume });
   }
+
+  handlingSize(width: string | number | undefined, height: string | number | undefined): void {
+    this.videoElement.setAttribute('style', `width: ${width || '100%'}; height: ${height || '100%'}`);
+  }
 }

@@ -6,7 +6,9 @@ export const createVideoElement = (id: string): HTMLVideoElement => {
   videoElement.width = 0;
   videoElement.setAttribute('style', 'position: absolute;');
 
-  document.body.appendChild(videoElement);
+  const container: Element | undefined = document.getElementById('video-player-root');
+
+  container?.appendChild(videoElement) || document.body.appendChild(videoElement);
 
   return videoElement;
 };
