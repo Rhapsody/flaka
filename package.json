@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "build": "tsc",
+    "dev": "tsc -w",
     "docs": "typedoc --out docs src/index.ts",
     "install": "npm run build",
     "lint": "eslint 'src' --ext .ts --fix",
