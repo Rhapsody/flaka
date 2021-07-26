@@ -30,6 +30,13 @@ test('should create video element in the dom', () => {
   expect(videoElement.id).toStrictEqual(TEST_PLAYER_ID);
 });
 
+test('should create video element as a child of certain node in dom', () => {
+  const parent = document.createElement('div');
+  new FlakaPlayer(TEST_PLAYER_ID, {}, (video) => parent.appendChild(video));
+
+  expect(parent.getElementsByTagName('video').length).toEqual(1);
+});
+
 test('should instance shaka-player', () => {
   const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {});
 

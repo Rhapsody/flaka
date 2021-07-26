@@ -22,7 +22,7 @@ export interface Track {
   artistId: string;
 }
 
-export type DetermineVideoElement = (child: HTMLVideoElement) => HTMLVideoElement | undefined;
+export type DetermineVideoElement = (video: HTMLVideoElement) => HTMLVideoElement | undefined;
 
 export interface FlakaPlayerOptions {
   validatePlayback?: () => Promise<void>;
