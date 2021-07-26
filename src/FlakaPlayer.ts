@@ -1,6 +1,6 @@
 import { Player, polyfill, net, util, extern } from 'shaka-player';
 import { defaultPlayerState } from './constants';
-import { createVideoElement } from './helpers';
+import { createVideoElement, appendVideoToBody } from './helpers';
 import { Logger } from './Logger';
 import { FlakaPlayerOptions, PlayerState, PlayState, Track } from './types';
 
@@ -13,30 +13,49 @@ export class FlakaPlayer {
   videoElement: HTMLVideoElement;
   logger: Logger;
 
-  constructor(id: string, options: FlakaPlayerOptions) {
+  constructor(
+    id: string,
+    options: FlakaPlayerOptions,
+    determineVideoElement?: (child: HTMLVideoElement) => HTMLVideoElement,
+  ) {
     this.id = id;
     this.options = options;
     this.logger = new Logger();
-    this.videoElement = document.getElementById(id) as HTMLVideoElement;
 
-    if (!this.videoElement) {
-      this.videoElement = createVideoElement(id);
+    this.videoElement = document.getElementById(id) as HTMLVideoElement;
+    if (this.videoElement) {
+      this.videoElement.remove();
+    }
+
+    if (typeof determineVideoElement === 'function') {
+      this.videoElement = determineVideoElement(createVideoElement(id));
+    } else {
+      this.videoElement = document.getElementById(id) as HTMLVideoElement;
+
+      if (!this.videoElement) {
+        this.videoElement = createVideoElement(id);
+        this.videoElement = appendVideoToBody(this.videoElement);
+      }
     }
 
     this.videoElement.addEventListener('timeupdate', (event: Event & { target: HTMLVideoElement }) => {
+      console.log('timeupdate');
       options.onTimeUpdate(event.target.currentTime);
     });
 
     this.videoElement.addEventListener('error', (event) => {
+      console.log('error');
       console.error(event);
       this.options.onError(event.message);
     });
 
     this.videoElement.addEventListener('durationchange', (event: Event & { target: HTMLVideoElement }) => {
+      console.log('durationchange');
       this.changeState({ ...this.state, duration: event.target.duration });
     });
 
     this.videoElement.addEventListener('ended', () => {
+      console.log('ended');
       this.changeState({ ...this.state, playState: PlayState.STOPPED });
       options.onTrackEnded();
     });
@@ -55,15 +74,19 @@ export class FlakaPlayer {
 
     // Listen for error events.
     player.addEventListener('error', (event) => {
+      console.log('error');
       this.onErrorEvent(event);
     });
     player.addEventListener('buffering', (event) => {
+      console.log('buffering');
       this.changeState({ ...this.state, loading: event.buffering });
     });
     player.addEventListener('loading', () => {
+      console.log('loading');
       this.changeState({ ...this.state, loading: true });
     });
     player.addEventListener('loaded', () => {
+      console.log('loaded');
       this.changeState({ ...this.state, loading: false });
     });
 
@@ -176,7 +199,7 @@ export class FlakaPlayer {
     this.changeState({ ...this.state, volume });
   }
 
-  handlingSize(width: string | number | undefined, height: string | number | undefined): void {
+  handleSize(width: string | number | undefined, height: string | number | undefined): void {
     this.videoElement.setAttribute('style', `width: ${width || '100%'}; height: ${height || '100%'}`);
   }
 }
