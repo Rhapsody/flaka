@@ -2,7 +2,7 @@ import { Player, polyfill, net, util, extern } from 'shaka-player';
 import { defaultPlayerState } from './constants';
 import { createVideoElement, appendVideoToBody } from './helpers';
 import { Logger } from './Logger';
-import { FlakaPlayerOptions, PlayerState, PlayState, Track } from './types';
+import { FlakaPlayerOptions, PlayerState, PlayState, Track, DetermineVideoElement } from './types';
 
 export class FlakaPlayer {
   id: string;
@@ -11,13 +11,10 @@ export class FlakaPlayer {
   player?: Player;
   currentTrack?: Track;
   videoElement: HTMLVideoElement;
+  determineVideoElement?: DetermineVideoElement;
   logger: Logger;
 
-  constructor(
-    id: string,
-    options: FlakaPlayerOptions,
-    determineVideoElement?: (child: HTMLVideoElement) => HTMLVideoElement,
-  ) {
+  constructor(id: string, options: FlakaPlayerOptions, determineVideoElement?: DetermineVideoElement) {
     this.id = id;
     this.options = options;
     this.logger = new Logger();

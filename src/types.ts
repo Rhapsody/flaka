@@ -22,6 +22,8 @@ export interface Track {
   artistId: string;
 }
 
+export type DetermineVideoElement = (child: HTMLVideoElement) => HTMLVideoElement | undefined;
+
 export interface FlakaPlayerOptions {
   validatePlayback?: () => Promise<void>;
   onStateChange?: (state: PlayerState, track: Track) => void;
