@@ -1,6 +1,6 @@
 import { Player, polyfill, net, util, extern } from 'shaka-player';
 import { defaultPlayerState } from './constants';
-import { createVideoElement, appendVideoToBody } from './helpers';
+import { createVideoElement, appendVideoToBody, setAbsolutePosition, setDimensionsForAudioStream } from './helpers';
 import { Logger } from './Logger';
 import { FlakaPlayerOptions, PlayerState, PlayState, Track, DetermineVideoElement } from './types';
 
@@ -31,6 +31,8 @@ export class FlakaPlayer {
 
       if (!this.videoElement) {
         this.videoElement = createVideoElement(id);
+        this.videoElement = setDimensionsForAudioStream(this.videoElement);
+        this.videoElement = setAbsolutePosition(this.videoElement);
         this.videoElement = appendVideoToBody(this.videoElement);
       }
     }
