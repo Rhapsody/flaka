@@ -22,6 +22,12 @@ export interface Track {
   artistId: string;
 }
 
+export enum DrmType {
+  WIDEVINE = 'widevine',
+  PLAYREADY = 'playready',
+  FAIRPLAY = 'fairplay',
+}
+
 export interface FlakaPlayerOptions {
   validatePlayback?: () => Promise<void>;
   onStateChange?: (state: PlayerState, track: Track) => void;

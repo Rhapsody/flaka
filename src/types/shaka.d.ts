@@ -202,7 +202,14 @@ declare module 'shaka-player' {
      *          if there were invalid entries.
      */
 
-    configure(config: extern.PlayerConfiguration | string): boolean;
+    configure(
+      config: extern.PlayerConfiguration | string,
+      value?:
+        | string
+        | Uint8Array
+        | ((arg1: ArrayBuffer | ArrayBufferView | null, arg2: string) => Uint8Array | ArrayBuffer | ArrayBufferView)
+        | ((arg1: BufferSource, initDataType: string) => string | ArrayBuffer | Uint8Array | ArrayBufferView),
+    ): boolean;
 
     /**
      * After destruction, a Player object cannot be
@@ -1193,6 +1200,29 @@ declare module 'shaka-player' {
       }
     }
 
+    namespace BufferUtils {
+      function toArrayBuffer(a: any): string;
+    }
+
+    namespace Uint8ArrayUtils {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      function toStandardBase64(data: Uint8Array | Uint16Array): string;
+      function toBase64(data: Uint8Array | Uint16Array): string;
+      function fromBase64(data: string): Uint8Array;
+    }
+
+    namespace Iterables {
+      function enumerate(a: any): any;
+    }
+
+    namespace FairPlayUtils {
+      function initDataTransform(
+        data: ArrayBufferView | ArrayBuffer,
+        contentId: string,
+        cert: Uint8Array,
+      ): ArrayBuffer | ArrayBufferView;
+    }
+
     class DataViewReader {
       static endianness: number;
       constructor(dataView: DataView, endianness: DataViewReader.Endianness);
@@ -1440,7 +1470,7 @@ declare module 'shaka-player' {
       method: string;
 
       /** The body of the request. */
-      body?: BufferSource;
+      body?: BufferSource | string;
 
       /** A mapping of headers for the request. e.g.: {'HEADER': 'VALUE'} */
       headers?: { [key: string]: string };

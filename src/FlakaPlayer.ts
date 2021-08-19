@@ -2,7 +2,7 @@ import { Player, polyfill, net, util, extern } from 'shaka-player';
 import { defaultPlayerState } from './constants';
 import { createVideoElement } from './helpers';
 import { Logger } from './Logger';
-import { FlakaPlayerOptions, PlayerState, PlayState, Track } from './types';
+import { DrmType, FlakaPlayerOptions, PlayerState, PlayState, Track } from './types';
 
 export class FlakaPlayer {
   id: string;
@@ -12,12 +12,14 @@ export class FlakaPlayer {
   currentTrack?: Track;
   videoElement: HTMLVideoElement;
   logger: Logger;
+  fairPlaySetup: boolean;
 
   constructor(id: string, options: FlakaPlayerOptions) {
     this.id = id;
     this.options = options;
     this.logger = new Logger();
     this.videoElement = document.getElementById(id) as HTMLVideoElement;
+    this.fairPlaySetup = false;
 
     if (!this.videoElement) {
       this.videoElement = createVideoElement(id);
@@ -93,12 +95,105 @@ export class FlakaPlayer {
     }
   }
 
-  async play(track: Track, servers?: extern.DrmConfiguration['servers'], token?: string): Promise<void> {
-    this.player.resetConfiguration();
+  getFairPlayContentId(skdUri: string): string {
+    return skdUri.split('skd://')[1];
+  }
+
+  async configureFairPlay(certificateUrl: string, token?: string): Promise<void> {
+    let contentId;
+
+    this.player.configure('drm.initDataTransform', (initData, initDataType) => {
+      if (initDataType !== 'skd') return initData;
+      // 'initData' is a buffer containing an 'skd://' URL as a UTF-8 string.
+      const skdUri = util.StringUtils.fromBytesAutoDetect(initData);
+      contentId = this.getFairPlayContentId(skdUri);
+      const cert = this.player.drmInfo().serverCertificate;
+      return util.FairPlayUtils.initDataTransform(initData, contentId, cert);
+    });
+
+    this.player.getNetworkingEngine().registerRequestFilter((type, request) => {
+      if (type !== net.NetworkingEngine.RequestType.LICENSE) {
+        return;
+      }
+
+      const base64EncodeUint8Array = function (a) {
+        let c = '';
+        for (
+          let d, e, f, g, h, i, j, b = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=', k = 0;
+          k < a.length;
+
+        ) {
+          (d = a[k++]),
+            (e = k < a.length ? a[k++] : Number.NaN),
+            (f = k < a.length ? a[k++] : Number.NaN),
+            (g = d >> 2),
+            (h = ((3 & d) << 4) | (e >> 4)),
+            (i = ((15 & e) << 2) | (f >> 6)),
+            (j = 63 & f),
+            isNaN(e) ? (i = j = 64) : isNaN(f) && (j = 64),
+            (c += b.charAt(g) + b.charAt(h) + b.charAt(i) + b.charAt(j));
+        }
+        return c;
+      };
+
+      const originalPayload = new Uint8Array(request.body as ArrayBufferLike);
+      const data = `spc=${base64EncodeUint8Array(originalPayload)}&assetId=${contentId}`;
+
+      request.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
+      request.headers['customdata'] = token;
+      request.body = util.StringUtils.toUTF8(data);
+    });
+
+    this.player.getNetworkingEngine().registerResponseFilter((type, response) => {
+      if (type != net.NetworkingEngine.RequestType.LICENSE) {
+        return;
+      }
+      let responseText = util.StringUtils.fromUTF8(response.data);
+      responseText = responseText.trim();
+      response.data = util.Uint8ArrayUtils.fromBase64(responseText).buffer;
+    });
+  }
+
+  getServers(drmType: DrmType, serverUrl: string): extern.DrmConfiguration['servers'] {
+    if (drmType === DrmType.FAIRPLAY) {
+      return { 'com.apple.fps.1_0': serverUrl };
+    }
+
+    if (drmType === DrmType.PLAYREADY) {
+      return { 'com.microsoft.playready': serverUrl };
+    }
+
+    return { 'com.widevine.alpha': serverUrl };
+  }
+
+  async play(
+    track: Track,
+    serverUrl?: string,
+    drmType?: DrmType,
+    token?: string,
+    certificateUrl?: string,
+  ): Promise<void> {
     // Try to load a manifest.
     // This is an asynchronous process.
     try {
-      if (servers) {
+      if (drmType === DrmType.FAIRPLAY && certificateUrl && !this.fairPlaySetup) {
+        this.fairPlaySetup = true;
+        const req = await fetch(certificateUrl);
+        const cert = await req.arrayBuffer();
+        this.player.configure({
+          drm: {
+            advanced: {
+              'com.apple.fps.1_0': {
+                serverCertificate: new Uint8Array(cert),
+              },
+            },
+          },
+        });
+        await this.configureFairPlay(certificateUrl, token);
+      }
+
+      if (serverUrl && drmType) {
+        const servers = this.getServers(drmType, serverUrl);
         this.player.configure({
           drm: {
             servers,
@@ -147,6 +242,10 @@ export class FlakaPlayer {
 
       if (this.options.reportManifestLoadedTime && stats.manifestTimeSeconds) {
         this.options.reportManifestLoadedTime(track, stats.manifestTimeSeconds);
+      }
+
+      if (drmType === DrmType.FAIRPLAY) {
+        this.videoElement.play();
       }
 
       this.changeState({ ...this.state, playState: PlayState.PLAYING });
