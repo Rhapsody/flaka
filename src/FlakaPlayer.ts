@@ -60,7 +60,7 @@ export class FlakaPlayer {
       this.onErrorEvent(event);
     });
     player.addEventListener('buffering', (event) => {
-      this.changeState({ ...this.state, loading: event.buffering });
+      this.changeState({ ...this.state, loading: true });
     });
     player.addEventListener('loading', () => {
       this.changeState({ ...this.state, loading: true });
@@ -80,7 +80,7 @@ export class FlakaPlayer {
     }
   }
 
-  onErrorEvent(event: Player.ErrorEvent): void {
+  onErrorEvent(event: any): void {
     this.logger.log('error', {
       trackId: this.currentTrack?.id,
       description: event.detail.message,
@@ -96,18 +96,17 @@ export class FlakaPlayer {
   }
 
   getFairPlayContentId(skdUri: string): string {
+    debugger;
     return skdUri.split('skd://')[1];
   }
 
   async configureFairPlay(certificateUrl: string, token?: string): Promise<void> {
     let contentId;
 
-    this.player.configure('drm.initDataTransform', (initData, initDataType) => {
-      if (initDataType !== 'skd') return initData;
+    this.player.configure('drm.initDataTransform', (initData, contentId, cert) => {
       // 'initData' is a buffer containing an 'skd://' URL as a UTF-8 string.
       const skdUri = util.StringUtils.fromBytesAutoDetect(initData);
       contentId = this.getFairPlayContentId(skdUri);
-      const cert = this.player.drmInfo().serverCertificate;
       return util.FairPlayUtils.initDataTransform(initData, contentId, cert);
     });
 
