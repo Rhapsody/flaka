@@ -8,7 +8,7 @@ export class FlakaPlayer {
   id: string;
   options: FlakaPlayerOptions;
   state = defaultPlayerState;
-  player?: Player;
+  player?: shaka.Player;
   currentTrack?: Track;
   videoElement: HTMLVideoElement;
   logger: Logger;
