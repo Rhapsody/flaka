@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/Rhapsody/flaka#readme",
   "dependencies": {
-    "shaka-player": "^3.0.10",
+    "shaka-player": "antebarac/shaka-player",
     "typedoc": "^0.20.35"
   },
   "devDependencies": {
