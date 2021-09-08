@@ -98,7 +98,7 @@ export class FlakaPlayer {
   async configureFairPlay(certificateUrl: string, token?: string): Promise<void> {
     let contentId;
     this.player.configure('drm.initDataTransform', (initData, initDataType, drmInfo) => {
-      alert("in this shit");
+      debugger;
       if (initDataType !== 'skd') return initData;
       // 'initData' is a buffer containing an 'skd://' URL as a UTF-8 string.
       const skdUri = shaka.util.StringUtils.fromBytesAutoDetect(initData);
