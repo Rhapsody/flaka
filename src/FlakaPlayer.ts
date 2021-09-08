@@ -95,62 +95,43 @@ export class FlakaPlayer {
     }
   }
 
-  getFairPlayContentId(skdUri: string): string {
-    debugger;
-    return skdUri.split('skd://')[1];
-  }
-
   async configureFairPlay(certificateUrl: string, token?: string): Promise<void> {
     let contentId;
-
-    this.player.configure('drm.initDataTransform', (initData, contentId, cert) => {
+    this.player.configure('drm.initDataTransform', (initData, initDataType, drmInfo) => {
+      alert("in this shit");
+      if (initDataType !== 'skd') return initData;
       // 'initData' is a buffer containing an 'skd://' URL as a UTF-8 string.
-      const skdUri = util.StringUtils.fromBytesAutoDetect(initData);
-      contentId = this.getFairPlayContentId(skdUri);
-      return util.FairPlayUtils.initDataTransform(initData, contentId, cert);
+      const skdUri = shaka.util.StringUtils.fromBytesAutoDetect(initData);
+      contentId = skdUri.split('skd://')[1];
+      return shaka.util.FairPlayUtils.initDataTransform(initData, contentId, drmInfo.serverCertificate);
     });
 
     this.player.getNetworkingEngine().registerRequestFilter((type, request) => {
-      if (type !== net.NetworkingEngine.RequestType.LICENSE) {
+      if (type !== shaka.net.NetworkingEngine.RequestType.LICENSE) {
         return;
       }
-
-      const base64EncodeUint8Array = function (a) {
-        let c = '';
-        for (
-          let d, e, f, g, h, i, j, b = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=', k = 0;
-          k < a.length;
-
-        ) {
-          (d = a[k++]),
-            (e = k < a.length ? a[k++] : Number.NaN),
-            (f = k < a.length ? a[k++] : Number.NaN),
-            (g = d >> 2),
-            (h = ((3 & d) << 4) | (e >> 4)),
-            (i = ((15 & e) << 2) | (f >> 6)),
-            (j = 63 & f),
-            isNaN(e) ? (i = j = 64) : isNaN(f) && (j = 64),
-            (c += b.charAt(g) + b.charAt(h) + b.charAt(i) + b.charAt(j));
-        }
-        return c;
-      };
-
       const originalPayload = new Uint8Array(request.body as ArrayBufferLike);
-      const data = `spc=${base64EncodeUint8Array(originalPayload)}&assetId=${contentId}`;
+      const data = `spc=${shaka.util.Uint8ArrayUtils.toStandardBase64(originalPayload)}&assetId=${contentId}`;
 
-      request.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
+      request.headers['Content-Type'] = 'text/plain';
       request.headers['customdata'] = token;
-      request.body = util.StringUtils.toUTF8(data);
+      //request.body = shaka.util.StringUtils.toUTF8(encodeURIComponent(data));
+      request.body = shaka.util.StringUtils.toUTF8(data);
     });
 
     this.player.getNetworkingEngine().registerResponseFilter((type, response) => {
-      if (type != net.NetworkingEngine.RequestType.LICENSE) {
+      if (type != shaka.net.NetworkingEngine.RequestType.LICENSE) {
         return;
       }
-      let responseText = util.StringUtils.fromUTF8(response.data);
+      let responseText = shaka.util.StringUtils.fromUTF8(response.data);
       responseText = responseText.trim();
-      response.data = util.Uint8ArrayUtils.fromBase64(responseText).buffer;
-    });
+      if (responseText.substr(0, 5) === '<ckc>' &&
+        responseText.substr(-6) === '</ckc>') {
+        responseText = responseText.slice(5, -6);
+      }
+      response.data = shaka.util.Uint8ArrayUtils.fromBase64(responseText).buffer;
+
+    });;
   }
 
   getServers(drmType: DrmType, serverUrl: string): extern.DrmConfiguration['servers'] {
