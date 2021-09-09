@@ -1,10 +1,10 @@
-import { Player, polyfill } from 'shaka-player';
+import { shaka } from 'shaka-player';
 import { defaultPlayerState } from '../constants';
 
 window.addEventListener = jest.fn();
-Player.isBrowserSupported = () => true;
+shaka.Player.isBrowserSupported = () => true;
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-polyfill.installAll = () => {};
+shaka.polyfill.installAll = () => { };
 
 import { FlakaPlayer } from '../FlakaPlayer';
 import { DrmType, PlayState, Track } from '../types';
@@ -33,7 +33,7 @@ test('should create video element in the dom', () => {
 test('should instance shaka-player', () => {
   const flakaPlayer = new FlakaPlayer(TEST_PLAYER_ID, {});
 
-  expect(flakaPlayer.player).toBeInstanceOf(Player);
+  expect(flakaPlayer.player).toBeInstanceOf(shaka.Player);
 });
 
 test('should call validatePlayback before playing the track', () => {

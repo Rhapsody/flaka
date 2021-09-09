@@ -1,4 +1,4 @@
-import { Player, polyfill, net, util, extern } from 'shaka-player';
+import { shaka } from 'shaka-player';
 import { defaultPlayerState } from './constants';
 import { createVideoElement } from './helpers';
 import { Logger } from './Logger';
@@ -44,8 +44,8 @@ export class FlakaPlayer {
     });
 
     // Check to see if the browser supports the basic APIs Shaka needs.
-    if (Player.isBrowserSupported()) {
-      polyfill.installAll();
+    if (shaka.Player.isBrowserSupported()) {
+      shaka.polyfill.installAll();
       this.initPlayer();
     } else {
       throw new Error('Browser is not supported');
@@ -53,7 +53,7 @@ export class FlakaPlayer {
   }
 
   initPlayer(): void {
-    const player = new Player(this.videoElement);
+    const player = new shaka.Player(this.videoElement);
 
     // Listen for error events.
     player.addEventListener('error', (event) => {
@@ -72,7 +72,7 @@ export class FlakaPlayer {
     this.player = player;
   }
 
-  onError(error: util.Error): void {
+  onError(error: shaka.util.Error): void {
     // Log the error.
     console.error('Error code', error.code, 'object', error);
     if (this.options.onError) {
@@ -134,7 +134,7 @@ export class FlakaPlayer {
     });;
   }
 
-  getServers(drmType: DrmType, serverUrl: string): extern.DrmConfiguration['servers'] {
+  getServers(drmType: DrmType, serverUrl: string): shaka.extern.DrmConfiguration['servers'] {
     if (drmType === DrmType.FAIRPLAY) {
       return { 'com.apple.fps.1_0': serverUrl };
     }
@@ -183,7 +183,7 @@ export class FlakaPlayer {
 
       if (token) {
         this.player.getNetworkingEngine().registerRequestFilter(function (type, request) {
-          if (type === net.NetworkingEngine.RequestType.LICENSE) {
+          if (type === shaka.net.NetworkingEngine.RequestType.LICENSE) {
             request.headers['customdata'] = token;
           }
         });
