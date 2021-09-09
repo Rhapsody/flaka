@@ -1,4 +1,4 @@
-import { shaka } from 'shaka-player';
+import * as shaka from 'shaka-player';
 import { defaultPlayerState } from '../constants';
 
 window.addEventListener = jest.fn();

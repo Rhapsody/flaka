@@ -1,4 +1,4 @@
-import { shaka } from 'shaka-player';
+import * as shaka from 'shaka-player';
 import { defaultPlayerState } from './constants';
 import { createVideoElement } from './helpers';
 import { Logger } from './Logger';
@@ -98,7 +98,6 @@ export class FlakaPlayer {
   async configureFairPlay(certificateUrl: string, token?: string): Promise<void> {
     let contentId;
     this.player.configure('drm.initDataTransform', (initData, initDataType, drmInfo) => {
-      debugger;
       if (initDataType !== 'skd') return initData;
       // 'initData' is a buffer containing an 'skd://' URL as a UTF-8 string.
       const skdUri = shaka.util.StringUtils.fromBytesAutoDetect(initData);
@@ -158,13 +157,11 @@ export class FlakaPlayer {
     try {
       if (drmType === DrmType.FAIRPLAY && certificateUrl && !this.fairPlaySetup) {
         this.fairPlaySetup = true;
-        const req = await fetch(certificateUrl);
-        const cert = await req.arrayBuffer();
         this.player.configure({
           drm: {
             advanced: {
               'com.apple.fps.1_0': {
-                serverCertificate: new Uint8Array(cert),
+                serverCertificateUri: certificateUrl,
               },
             },
           },
@@ -181,7 +178,7 @@ export class FlakaPlayer {
         });
       }
 
-      if (token) {
+      if (token && drmType !== DrmType.FAIRPLAY) {
         this.player.getNetworkingEngine().registerRequestFilter(function (type, request) {
           if (type === shaka.net.NetworkingEngine.RequestType.LICENSE) {
             request.headers['customdata'] = token;
@@ -207,6 +204,7 @@ export class FlakaPlayer {
 
       await this.player.load(track.url);
 
+
       this.currentTrack = track;
 
       if (this.options.onTrackChange) {
@@ -223,13 +221,13 @@ export class FlakaPlayer {
       if (this.options.reportManifestLoadedTime && stats.manifestTimeSeconds) {
         this.options.reportManifestLoadedTime(track, stats.manifestTimeSeconds);
       }
-
-      if (drmType === DrmType.FAIRPLAY) {
+      if (/Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor)) {
         this.videoElement.play();
       }
 
       this.changeState({ ...this.state, playState: PlayState.PLAYING });
     } catch (e) {
+      debugger;
       // onError is executed if the asynchronous load fails.
       this.onError(e);
     }
