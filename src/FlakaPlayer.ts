@@ -59,8 +59,8 @@ export class FlakaPlayer {
     player.addEventListener('error', (event) => {
       this.onErrorEvent(event);
     });
-    player.addEventListener('buffering', (event) => {
-      this.changeState({ ...this.state, loading: true });
+    player.addEventListener('buffering', (event: Event & { buffering: boolean }) => {
+      this.changeState({ ...this.state, loading: event.buffering });
     });
     player.addEventListener('loading', () => {
       this.changeState({ ...this.state, loading: true });
@@ -150,11 +150,11 @@ export class FlakaPlayer {
     token?: string,
     certificateUrl?: string,
   ): Promise<void> {
+    this.player.resetConfiguration();
     // Try to load a manifest.
     // This is an asynchronous process.
     try {
-      if (drmType === DrmType.FAIRPLAY && certificateUrl && !this.fairPlaySetup) {
-        this.fairPlaySetup = true;
+      if (drmType === DrmType.FAIRPLAY && certificateUrl) {
         this.player.configure({
           drm: {
             advanced: {
@@ -164,7 +164,10 @@ export class FlakaPlayer {
             },
           },
         });
-        await this.configureFairPlay(certificateUrl, token);
+        if (!this.fairPlaySetup) {
+          this.fairPlaySetup = true;
+          await this.configureFairPlay(certificateUrl, token);
+        }
       }
 
       if (serverUrl && drmType) {

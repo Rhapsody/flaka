@@ -4,7 +4,7 @@ import { defaultPlayerState } from '../constants';
 window.addEventListener = jest.fn();
 shaka.Player.isBrowserSupported = () => true;
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-shaka.polyfill.installAll = () => { };
+shaka.polyfill.installAll = () => {};
 
 import { FlakaPlayer } from '../FlakaPlayer';
 import { DrmType, PlayState, Track } from '../types';
