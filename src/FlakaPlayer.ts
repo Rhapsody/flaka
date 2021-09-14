@@ -1,4 +1,4 @@
-import * as shaka from 'shaka-player';
+import shaka from 'shaka-player';
 import { defaultPlayerState } from './constants';
 import { createVideoElement } from './helpers';
 import { Logger } from './Logger';
@@ -124,13 +124,11 @@ export class FlakaPlayer {
       }
       let responseText = shaka.util.StringUtils.fromUTF8(response.data);
       responseText = responseText.trim();
-      if (responseText.substr(0, 5) === '<ckc>' &&
-        responseText.substr(-6) === '</ckc>') {
+      if (responseText.substr(0, 5) === '<ckc>' && responseText.substr(-6) === '</ckc>') {
         responseText = responseText.slice(5, -6);
       }
       response.data = shaka.util.Uint8ArrayUtils.fromBase64(responseText).buffer;
-
-    });;
+    });
   }
 
   getServers(drmType: DrmType, serverUrl: string): shaka.extern.DrmConfiguration['servers'] {
@@ -203,7 +201,6 @@ export class FlakaPlayer {
       }
 
       await this.player.load(track.url);
-
 
       this.currentTrack = track;
 
