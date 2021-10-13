@@ -62,9 +62,10 @@ export class FlakaPlayer {
     player.addEventListener('buffering', (event: Event & { buffering: boolean }) => {
       this.changeState({ ...this.state, loading: event.buffering });
     });
-    player.addEventListener('loading', () => {
-      this.changeState({ ...this.state, loading: true });
-    });
+    // player.addEventListener('loading', (event: Event) => {
+    //   debugger;
+    //   this.changeState({ ...this.state, loading: true });
+    // });
     player.addEventListener('loaded', () => {
       this.changeState({ ...this.state, loading: false });
     });
