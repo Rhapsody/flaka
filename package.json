@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "docs": "typedoc --out docs src/index.ts",
-    "install": "npm run build",
+    "postinstall": "npm run build",
     "lint": "eslint 'src' --ext .ts --fix",
     "test": "jest",
     "test:watch": "jest --watchAll",
