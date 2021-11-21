@@ -37,4 +37,7 @@ export interface FlakaPlayerOptions {
   onError?: (message: string) => void;
   reportManifestLoadedTime?: (track: Track, time: number) => void;
   reportPlayTime?: (track: Track, time: number) => void;
+  napiToken: string;
+  napiCatalog: string;
+  napiEnviroment: string;
 }

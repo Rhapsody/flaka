@@ -2,7 +2,19 @@ import shaka from 'shaka-player';
 import { defaultPlayerState } from './constants';
 import { createVideoElement } from './helpers';
 import { Logger } from './Logger';
+import { NapiRequest } from './NapiRequest';
 import { DrmType, FlakaPlayerOptions, PlayerState, PlayState, Track } from './types';
+
+interface TrackOnError {
+  track: Track;
+  serverUrl?: string;
+  drmType?: DrmType;
+  token?: string;
+  certificateUrl?: string;
+}
+
+const localStorageNapiPath = 'NAPISessionId';
+const unknowContext = 'UNKNOWN';
 
 export class FlakaPlayer {
   id: string;
@@ -13,6 +25,9 @@ export class FlakaPlayer {
   videoElement: HTMLVideoElement;
   logger: Logger;
   fairPlaySetup: boolean;
+  private napiSessionId?: string;
+  private sesionBlocked?: boolean;
+  private lastTrackParams?: TrackOnError;
 
   constructor(id: string, options: FlakaPlayerOptions) {
     this.id = id;
@@ -20,7 +35,6 @@ export class FlakaPlayer {
     this.logger = new Logger();
     this.videoElement = document.getElementById(id) as HTMLVideoElement;
     this.fairPlaySetup = false;
-
     if (!this.videoElement) {
       this.videoElement = createVideoElement(id);
     }
@@ -49,6 +63,12 @@ export class FlakaPlayer {
       this.initPlayer();
     } else {
       throw new Error('Browser is not supported');
+    }
+    const localStorageSessionId = localStorage.getItem(localStorageNapiPath);
+    if (localStorageSessionId) {
+      this.napiSessionId = localStorageSessionId;
+    } else {
+      this.createSession(this.options.napiToken);
     }
   }
 
@@ -131,7 +151,6 @@ export class FlakaPlayer {
       response.data = shaka.util.Uint8ArrayUtils.fromBase64(responseText).buffer;
     });
   }
-
   getServers(drmType: DrmType, serverUrl: string): shaka.extern.DrmConfiguration['servers'] {
     if (drmType === DrmType.FAIRPLAY) {
       return { 'com.apple.fps.1_0': serverUrl };
@@ -150,7 +169,33 @@ export class FlakaPlayer {
     drmType?: DrmType,
     token?: string,
     certificateUrl?: string,
+    napiContext?: string,
+    napiAcessToken?: string,
   ): Promise<void> {
+    this.lastTrackParams = {
+      track,
+      certificateUrl,
+      drmType,
+      serverUrl,
+      token,
+    };
+    if (napiAcessToken) {
+      this.options.napiToken = napiAcessToken;
+    }
+    if (this.sesionBlocked) {
+      this.options?.onError('403');
+      return;
+    }
+    if (!this.napiSessionId) {
+      await this.createSession(token);
+    }
+    const isSessionOK = await this.playbackSessionValidate({
+      options: { context: napiContext || unknowContext, trackId: track.id },
+      napiToken: this.options.napiToken,
+    });
+    if (!isSessionOK) {
+      return;
+    }
     this.player.resetConfiguration();
     // Try to load a manifest.
     // This is an asynchronous process.
@@ -240,7 +285,21 @@ export class FlakaPlayer {
     this.changeState({ ...this.state, playState: PlayState.PAUSED });
   }
 
-  resume(): void {
+  resume(createSession = false): void {
+    if (!createSession && this.sesionBlocked) {
+      this.options?.onError('403');
+      return;
+    }
+
+    if (createSession) {
+      this.sesionBlocked = false;
+      const { track, serverUrl, drmType, token, certificateUrl } = this.lastTrackParams;
+      this.createSession(this.options.napiToken).then(() => {
+        console.log('play from resume');
+        this.play(track, serverUrl, drmType, token, certificateUrl, unknowContext, this.options.napiToken);
+      });
+      return;
+    }
     this.videoElement.play();
     this.changeState({ ...this.state, playState: PlayState.PLAYING });
   }
@@ -252,5 +311,68 @@ export class FlakaPlayer {
   setVolume(volume: number): void {
     this.videoElement.volume = volume;
     this.changeState({ ...this.state, volume });
+  }
+
+  async createSession(token: string): Promise<void> {
+    const params = {
+      method: 'POST',
+    };
+    const response = await NapiRequest({
+      napiCatalog: this.options.napiCatalog,
+      napiEnviroment: this.options.napiEnviroment,
+      napiToken: token,
+      options: params,
+      path: 'sessions',
+    });
+    if (response.ok && response.body) {
+      const body = await response.json();
+      this.napiSessionId = body.session.id;
+      this.sesionBlocked = false;
+      localStorage.setItem(localStorageNapiPath, this.napiSessionId);
+    } else {
+      throw new Error('Could not create NAPI session ID');
+    }
+  }
+
+  async playbackSessionValidate({
+    options,
+    napiToken,
+  }: {
+    options: { [key: string]: string };
+    napiToken: string;
+  }): Promise<boolean> {
+    const params = {
+      method: 'GET',
+      queryparams: {
+        trackId: options.trackId,
+        context: options.context,
+      },
+    };
+    try {
+      const response = await NapiRequest({
+        napiCatalog: this.options.napiCatalog,
+        napiEnviroment: this.options.napiEnviroment,
+        napiToken: napiToken,
+        options: params,
+        path: `sessions/${this.napiSessionId}`,
+      });
+      if (!response.ok) {
+        if (response.status === 403 || response.status === 401) {
+          this.sesionBlocked = true;
+          this.options?.onError('403');
+          return false;
+        }
+        if (response.status === 404) {
+          await this.createSession(this.options.napiToken);
+          return await this.playbackSessionValidate({ options, napiToken });
+        }
+      }
+    } catch (e) {
+      console.log(e);
+      this.sesionBlocked = true;
+      this.options?.onError('403');
+      return false;
+    }
+    return true;
   }
 }
