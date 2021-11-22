@@ -5,7 +5,7 @@ import { Logger } from './Logger';
 import { NapiRequest } from './NapiRequest';
 import { DrmType, FlakaPlayerOptions, PlayerState, PlayState, Track } from './types';
 
-interface TrackOnError {
+interface LastTrackParams {
   track: Track;
   serverUrl?: string;
   drmType?: DrmType;
@@ -27,7 +27,7 @@ export class FlakaPlayer {
   fairPlaySetup: boolean;
   private napiSessionId?: string;
   private sesionBlocked?: boolean;
-  private lastTrackParams?: TrackOnError;
+  private lastTrackParams?: LastTrackParams;
 
   constructor(id: string, options: FlakaPlayerOptions) {
     this.id = id;
