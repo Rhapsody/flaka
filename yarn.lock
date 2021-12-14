@@ -364,6 +364,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.11.2":
+  version: 7.16.3
+  resolution: "@babel/runtime@npm:7.16.3"
+  dependencies:
+    regenerator-runtime: ^0.13.4
+  checksum: ab8ac887096d76185ddbf291d28fb976cd32473696dc497ad4905b784acbd5aa462533ad83a5c5104e10ead28c2e0e119840ee28ed8eff90dcdde9d57f916eda
+  languageName: node
+  linkType: hard
+
 "@babel/template@npm:^7.15.4, @babel/template@npm:^7.3.3":
   version: 7.15.4
   resolution: "@babel/template@npm:7.15.4"
@@ -1997,6 +2006,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dom-walk@npm:^0.1.0":
+  version: 0.1.2
+  resolution: "dom-walk@npm:0.1.2"
+  checksum: 19eb0ce9c6de39d5e231530685248545d9cd2bd97b2cb3486e0bfc0f2a393a9addddfd5557463a932b52fdfcf68ad2a619020cd2c74a5fe46fbecaa8e80872f3
+  languageName: node
+  linkType: hard
+
 "domexception@npm:^2.0.1":
   version: 2.0.1
   resolution: "domexception@npm:2.0.1"
@@ -2534,6 +2550,7 @@ __metadata:
     husky: ^6.0.0
     jest: ^26.6.3
     lint-staged: ^10.5.4
+    mux.js: ^6.0.0
     prettier: ^2.2.1
     shaka-player: antebarac/shaka-player
     ts-jest: ^26.5.4
@@ -2735,6 +2752,16 @@ fsevents@^2.1.2:
     once: ^1.3.0
     path-is-absolute: ^1.0.0
   checksum: b61f48973bbdcf5159997b0874a2165db572b368b931135832599875919c237fc05c12984e38fe828e69aa8a921eb0e8a4997266211c517c9cfaae8a93988bb8
+  languageName: node
+  linkType: hard
+
+"global@npm:^4.4.0":
+  version: 4.4.0
+  resolution: "global@npm:4.4.0"
+  dependencies:
+    min-document: ^2.19.0
+    process: ^0.11.10
+  checksum: 9c057557c8f5a5bcfbeb9378ba4fe2255d04679452be504608dd5f13b54edf79f7be1db1031ea06a4ec6edd3b9f5f17d2d172fb47e6c69dae57fd84b7e72b77f
   languageName: node
   linkType: hard
 
@@ -4299,6 +4326,15 @@ fsevents@^2.1.2:
   languageName: node
   linkType: hard
 
+"min-document@npm:^2.19.0":
+  version: 2.19.0
+  resolution: "min-document@npm:2.19.0"
+  dependencies:
+    dom-walk: ^0.1.0
+  checksum: da6437562ea2228041542a2384528e74e22d1daa1a4ec439c165abf0b9d8a63e17e3b8a6dc6e0c731845e85301198730426932a0e813d23f932ca668340c9623
+  languageName: node
+  linkType: hard
+
 "minimatch@npm:^3.0.0, minimatch@npm:^3.0.4":
   version: 3.0.4
   resolution: "minimatch@npm:3.0.4"
@@ -4422,6 +4458,18 @@ fsevents@^2.1.2:
   version: 2.1.3
   resolution: "ms@npm:2.1.3"
   checksum: aa92de608021b242401676e35cfa5aa42dd70cbdc082b916da7fb925c542173e36bce97ea3e804923fe92c0ad991434e4a38327e15a1b5b5f945d66df615ae6d
+  languageName: node
+  linkType: hard
+
+"mux.js@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "mux.js@npm:6.0.0"
+  dependencies:
+    "@babel/runtime": ^7.11.2
+    global: ^4.4.0
+  bin:
+    muxjs-transmux: bin/transmux.js
+  checksum: b9b10fa510b8a94b901b97e4442bb7a6c7cc292054a0d3a5897cb8d9814718cc7df083bc6ff3ad0b17bdf2d387b5660cc1691e437075e97ea6f263ca4669decc
   languageName: node
   linkType: hard
 
@@ -4911,6 +4959,13 @@ fsevents@^2.1.2:
   languageName: node
   linkType: hard
 
+"process@npm:^0.11.10":
+  version: 0.11.10
+  resolution: "process@npm:0.11.10"
+  checksum: bfcce49814f7d172a6e6a14d5fa3ac92cc3d0c3b9feb1279774708a719e19acd673995226351a082a9ae99978254e320ccda4240ddc474ba31a76c79491ca7c3
+  languageName: node
+  linkType: hard
+
 "progress@npm:^2.0.0, progress@npm:^2.0.3":
   version: 2.0.3
   resolution: "progress@npm:2.0.3"
@@ -5027,6 +5082,13 @@ fsevents@^2.1.2:
   dependencies:
     resolve: ^1.1.6
   checksum: fe76bf9c21875ac16e235defedd7cbd34f333c02a92546142b7911a0f7c7059d2e16f441fe6fb9ae203f459c05a31b2bcf26202896d89e390eda7514d5d2702b
+  languageName: node
+  linkType: hard
+
+"regenerator-runtime@npm:^0.13.4":
+  version: 0.13.9
+  resolution: "regenerator-runtime@npm:0.13.9"
+  checksum: 65ed455fe5afd799e2897baf691ca21c2772e1a969d19bb0c4695757c2d96249eb74ee3553ea34a91062b2a676beedf630b4c1551cc6299afb937be1426ec55e
   languageName: node
   linkType: hard
 
@@ -5314,10 +5376,10 @@ fsevents@^2.1.2:
 
 shaka-player@antebarac/shaka-player:
   version: 3.3.0-pre
-  resolution: "shaka-player@https://github.com/antebarac/shaka-player.git#commit=996eeaa730f8cc334e48837b147bccfb037bac18"
+  resolution: "shaka-player@https://github.com/antebarac/shaka-player.git#commit=2e54bf73dbda27d4e9d81e2e290977d2c6a15216"
   dependencies:
     eme-encryption-scheme-polyfill: ^2.0.3
-  checksum: 31e391a100ac1bd3ff5fab11e5eede4560422046d92bba62d6ef3a59f77d700b772567a546cf1c04044491cc48633322a272900295bb5b00ee744065bf160e81
+  checksum: dd218c902c5704dce52f125037a13009d423a7469d19812a1d5d55af5476c2c959f087b7bcfa7531fdccb9483cbfb243083afa4b3ba84780a0babbf9940dceaa
   languageName: node
   linkType: hard
 

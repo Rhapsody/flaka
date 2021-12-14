@@ -3,6 +3,9 @@ import { defaultPlayerState } from './constants';
 import { createVideoElement } from './helpers';
 import { Logger } from './Logger';
 import { DrmType, FlakaPlayerOptions, PlayerState, PlayState, Track } from './types';
+import muxjs from 'mux.js';
+
+window.muxjs = muxjs;
 
 export class FlakaPlayer {
   id: string;

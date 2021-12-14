@@ -45,8 +45,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["husky", "npm:6.0.0"],
             ["jest", "npm:26.6.3"],
             ["lint-staged", "npm:10.5.4"],
+            ["mux.js", "npm:6.0.0"],
             ["prettier", "npm:2.4.0"],
-            ["shaka-player", "https://github.com/antebarac/shaka-player.git#commit=996eeaa730f8cc334e48837b147bccfb037bac18"],
+            ["shaka-player", "https://github.com/antebarac/shaka-player.git#commit=2e54bf73dbda27d4e9d81e2e290977d2c6a15216"],
             ["ts-jest", "virtual:697e8dbbbce127bea005e1192a736e272cb99ffcf9958bd82f2daa95c9eb09bc7c099dfd47461459fa7ef1d58d62dd88c57800cc8a1573e231a2ac169cd89f7f#npm:26.5.6"],
             ["typedoc", "virtual:697e8dbbbce127bea005e1192a736e272cb99ffcf9958bd82f2daa95c9eb09bc7c099dfd47461459fa7ef1d58d62dd88c57800cc8a1573e231a2ac169cd89f7f#npm:0.20.37"],
             ["typescript", "patch:typescript@npm%3A4.4.3#~builtin<compat/typescript>::version=4.4.3&hash=32657b"]
@@ -588,6 +589,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packagePeers": [
             "@babel/core",
             "@types/babel__core"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@babel/runtime", [
+        ["npm:7.16.3", {
+          "packageLocation": "./.yarn/cache/@babel-runtime-npm-7.16.3-b53f079b37-ab8ac88709.zip/node_modules/@babel/runtime/",
+          "packageDependencies": [
+            ["@babel/runtime", "npm:7.16.3"],
+            ["regenerator-runtime", "npm:0.13.9"]
           ],
           "linkType": "HARD",
         }]
@@ -2539,6 +2550,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["dom-walk", [
+        ["npm:0.1.2", {
+          "packageLocation": "./.yarn/cache/dom-walk-npm-0.1.2-7d20a1a8d8-19eb0ce9c6.zip/node_modules/dom-walk/",
+          "packageDependencies": [
+            ["dom-walk", "npm:0.1.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["domexception", [
         ["npm:2.0.1", {
           "packageLocation": "./.yarn/cache/domexception-npm-2.0.1-81b20626ae-d638e9cb05.zip/node_modules/domexception/",
@@ -3157,8 +3177,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["husky", "npm:6.0.0"],
             ["jest", "npm:26.6.3"],
             ["lint-staged", "npm:10.5.4"],
+            ["mux.js", "npm:6.0.0"],
             ["prettier", "npm:2.4.0"],
-            ["shaka-player", "https://github.com/antebarac/shaka-player.git#commit=996eeaa730f8cc334e48837b147bccfb037bac18"],
+            ["shaka-player", "https://github.com/antebarac/shaka-player.git#commit=2e54bf73dbda27d4e9d81e2e290977d2c6a15216"],
             ["ts-jest", "virtual:697e8dbbbce127bea005e1192a736e272cb99ffcf9958bd82f2daa95c9eb09bc7c099dfd47461459fa7ef1d58d62dd88c57800cc8a1573e231a2ac169cd89f7f#npm:26.5.6"],
             ["typedoc", "virtual:697e8dbbbce127bea005e1192a736e272cb99ffcf9958bd82f2daa95c9eb09bc7c099dfd47461459fa7ef1d58d62dd88c57800cc8a1573e231a2ac169cd89f7f#npm:0.20.37"],
             ["typescript", "patch:typescript@npm%3A4.4.3#~builtin<compat/typescript>::version=4.4.3&hash=32657b"]
@@ -3378,6 +3399,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["glob-parent", "npm:5.1.2"],
             ["is-glob", "npm:4.0.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["global", [
+        ["npm:4.4.0", {
+          "packageLocation": "./.yarn/cache/global-npm-4.4.0-888ee8033d-9c057557c8.zip/node_modules/global/",
+          "packageDependencies": [
+            ["global", "npm:4.4.0"],
+            ["min-document", "npm:2.19.0"],
+            ["process", "npm:0.11.10"]
           ],
           "linkType": "HARD",
         }]
@@ -5117,6 +5149,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["min-document", [
+        ["npm:2.19.0", {
+          "packageLocation": "./.yarn/cache/min-document-npm-2.19.0-458cdb3d84-da6437562e.zip/node_modules/min-document/",
+          "packageDependencies": [
+            ["min-document", "npm:2.19.0"],
+            ["dom-walk", "npm:0.1.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["minimatch", [
         ["npm:3.0.4", {
           "packageLocation": "./.yarn/cache/minimatch-npm-3.0.4-6e76f51c23-66ac295f8a.zip/node_modules/minimatch/",
@@ -5249,6 +5291,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/ms-npm-2.1.3-81ff3cfac1-aa92de6080.zip/node_modules/ms/",
           "packageDependencies": [
             ["ms", "npm:2.1.3"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["mux.js", [
+        ["npm:6.0.0", {
+          "packageLocation": "./.yarn/cache/mux.js-npm-6.0.0-944f4725ae-b9b10fa510.zip/node_modules/mux.js/",
+          "packageDependencies": [
+            ["mux.js", "npm:6.0.0"],
+            ["@babel/runtime", "npm:7.16.3"],
+            ["global", "npm:4.4.0"]
           ],
           "linkType": "HARD",
         }]
@@ -5795,6 +5848,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["process", [
+        ["npm:0.11.10", {
+          "packageLocation": "./.yarn/cache/process-npm-0.11.10-aeb3b641ae-bfcce49814.zip/node_modules/process/",
+          "packageDependencies": [
+            ["process", "npm:0.11.10"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["process-nextick-args", [
         ["npm:2.0.1", {
           "packageLocation": "./.yarn/cache/process-nextick-args-npm-2.0.1-b8d7971609-1d38588e52.zip/node_modules/process-nextick-args/",
@@ -5949,6 +6011,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["rechoir", "npm:0.6.2"],
             ["resolve", "patch:resolve@npm%3A1.20.0#~builtin<compat/resolve>::version=1.20.0&hash=00b1ff"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["regenerator-runtime", [
+        ["npm:0.13.9", {
+          "packageLocation": "./.yarn/cache/regenerator-runtime-npm-0.13.9-6d02340eec-65ed455fe5.zip/node_modules/regenerator-runtime/",
+          "packageDependencies": [
+            ["regenerator-runtime", "npm:0.13.9"]
           ],
           "linkType": "HARD",
         }]
@@ -6262,10 +6333,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["shaka-player", [
-        ["https://github.com/antebarac/shaka-player.git#commit=996eeaa730f8cc334e48837b147bccfb037bac18", {
-          "packageLocation": "./.yarn/cache/shaka-player-https-601eb6a8f7-31e391a100.zip/node_modules/shaka-player/",
+        ["https://github.com/antebarac/shaka-player.git#commit=2e54bf73dbda27d4e9d81e2e290977d2c6a15216", {
+          "packageLocation": "./.yarn/cache/shaka-player-https-3e8c249354-dd218c902c.zip/node_modules/shaka-player/",
           "packageDependencies": [
-            ["shaka-player", "https://github.com/antebarac/shaka-player.git#commit=996eeaa730f8cc334e48837b147bccfb037bac18"],
+            ["shaka-player", "https://github.com/antebarac/shaka-player.git#commit=2e54bf73dbda27d4e9d81e2e290977d2c6a15216"],
             ["eme-encryption-scheme-polyfill", "npm:2.0.3"]
           ],
           "linkType": "HARD",
