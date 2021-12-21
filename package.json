@@ -27,7 +27,7 @@
   "dependencies": {
     "mux.js": "^6.0.0",
     "shaka-player": "antebarac/shaka-player",
-    "typedoc": "^0.20.35"
+    "typedoc": "^0.21.00"
   },
   "devDependencies": {
     "@types/jest": "^26.0.22",
