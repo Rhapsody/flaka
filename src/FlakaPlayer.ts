@@ -15,14 +15,12 @@ export class FlakaPlayer {
   currentTrack?: Track;
   videoElement: HTMLVideoElement;
   logger: Logger;
-  fairPlaySetup: boolean;
 
   constructor(id: string, options: FlakaPlayerOptions) {
     this.id = id;
     this.options = options;
     this.logger = new Logger();
     this.videoElement = document.getElementById(id) as HTMLVideoElement;
-    this.fairPlaySetup = false;
 
     if (!this.videoElement) {
       this.videoElement = createVideoElement(id);
@@ -99,8 +97,13 @@ export class FlakaPlayer {
     }
   }
 
-  async configureFairPlay(certificateUrl: string, token?: string): Promise<void> {
+  async configureFairPlay(token?: string): Promise<void> {
     let contentId;
+
+    // DELETE OLD FILTERS
+    this.player.getNetworkingEngine().clearAllRequestFilters();
+    this.player.getNetworkingEngine().clearAllResponseFilters();
+
     this.player.configure('drm.initDataTransform', (initData, initDataType, drmInfo) => {
       if (initDataType !== 'skd') return initData;
       // 'initData' is a buffer containing an 'skd://' URL as a UTF-8 string.
@@ -115,7 +118,6 @@ export class FlakaPlayer {
       }
       const originalPayload = new Uint8Array(request.body as ArrayBufferLike);
       const data = `spc=${shaka.util.Uint8ArrayUtils.toStandardBase64(originalPayload)}&assetId=${contentId}`;
-
       request.headers['Content-Type'] = 'text/plain';
       request.headers['customdata'] = token;
       //request.body = shaka.util.StringUtils.toUTF8(encodeURIComponent(data));
@@ -168,10 +170,7 @@ export class FlakaPlayer {
             },
           },
         });
-        if (!this.fairPlaySetup) {
-          this.fairPlaySetup = true;
-          await this.configureFairPlay(certificateUrl, token);
-        }
+        await this.configureFairPlay(token);
       }
 
       if (serverUrl && drmType) {
