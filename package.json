@@ -1,6 +1,6 @@
 {
   "name": "flaka",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Streaming player for web player",
   "main": "dist/index.js",
   "private": true,

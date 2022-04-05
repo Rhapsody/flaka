@@ -228,9 +228,10 @@ export class FlakaPlayer {
         this.videoElement.play();
       }
 
+      this.videoElement.play();
+
       this.changeState({ ...this.state, playState: PlayState.PLAYING });
     } catch (e) {
-      debugger;
       // onError is executed if the asynchronous load fails.
       this.onError(e);
     }
