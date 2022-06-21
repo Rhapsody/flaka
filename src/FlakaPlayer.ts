@@ -221,7 +221,7 @@ export class FlakaPlayer {
         time: stats.manifestTimeSeconds,
       });
 
-      if (this.options.reportManifestLoadedTime && stats.manifestTimeSeconds) {
+      if (this.options.reportManifestLoadedTime) {
         this.options.reportManifestLoadedTime(track, stats.manifestTimeSeconds);
       }
       if (/Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor)) {
