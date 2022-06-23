@@ -221,6 +221,8 @@ export class FlakaPlayer {
         time: stats.manifestTimeSeconds,
       });
 
+      // manifestTimeSeconds on safari is returning Nan atm, but we are not using this data in web player,
+      // so removed it from condition
       if (this.options.reportManifestLoadedTime) {
         this.options.reportManifestLoadedTime(track, stats.manifestTimeSeconds);
       }
