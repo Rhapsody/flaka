@@ -59,7 +59,7 @@ export class FlakaPlayer {
     // Listen for error events.
     player.addEventListener('error', (event) => {
       this.onErrorEvent(event);
-      throw event;
+      throw new Error();
     });
     player.addEventListener('buffering', (event: Event & { buffering: boolean }) => {
       this.changeState({ ...this.state, loading: event.buffering });
