@@ -2,7 +2,7 @@ import shaka from 'shaka-player';
 import { defaultPlayerState } from './constants';
 import { createVideoElement } from './helpers';
 import { Logger } from './Logger';
-import { DrmType, FlakaPlayerOptions, PlayerState, PlayState, Track } from './types';
+import { DrmType, FlakaPlayerOptions, onErrorType, PlayerState, PlayState, Track } from './types';
 import muxjs from 'mux.js';
 
 window.muxjs = muxjs;
@@ -31,8 +31,8 @@ export class FlakaPlayer {
     });
 
     this.videoElement.addEventListener('error', (event) => {
-      console.error(event);
-      this.options.onError(event.message);
+      this.onErrorEvent(event);
+      this.options.onError(event);
     });
 
     this.videoElement.addEventListener('durationchange', (event: Event & { target: HTMLVideoElement }) => {
@@ -59,6 +59,7 @@ export class FlakaPlayer {
     // Listen for error events.
     player.addEventListener('error', (event) => {
       this.onErrorEvent(event);
+      throw new Error();
     });
     player.addEventListener('buffering', (event: Event & { buffering: boolean }) => {
       this.changeState({ ...this.state, loading: event.buffering });
@@ -74,20 +75,20 @@ export class FlakaPlayer {
     this.player = player;
   }
 
-  onError(error: shaka.util.Error): void {
+  onError(error: onErrorType): void {
     // Log the error.
-    console.error('Error code', error.code, 'object', error);
+    console.error({ error });
     if (this.options.onError) {
-      this.options.onError(error.message);
+      this.options.onError(error);
     }
   }
 
-  onErrorEvent(event: any): void {
+  onErrorEvent(eventError: onErrorType): void {
     this.logger.log('error', {
       trackId: this.currentTrack?.id,
-      description: event.detail.message,
+      error: eventError,
     });
-    this.onError(event.detail);
+    this.onError(eventError);
   }
 
   changeState(newState: PlayerState): void {
@@ -235,6 +236,7 @@ export class FlakaPlayer {
       this.changeState({ ...this.state, playState: PlayState.PLAYING });
     } catch (e) {
       // onError is executed if the asynchronous load fails.
+
       this.onError(e);
     }
   }

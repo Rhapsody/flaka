@@ -28,13 +28,15 @@ export enum DrmType {
   FAIRPLAY = 'fairplay',
 }
 
+export type onErrorType = ErrorEvent | shaka.util.Error | Event;
+
 export interface FlakaPlayerOptions {
   validatePlayback?: () => Promise<void>;
   onStateChange?: (state: PlayerState, track: Track) => void;
   onTimeUpdate?: (duration: number) => void;
   onTrackChange?: (track: Track) => void;
   onTrackEnded?: () => void;
-  onError?: (message: string) => void;
+  onError?: (error: onErrorType) => void;
   reportManifestLoadedTime?: (track: Track, time: number) => void;
   reportPlayTime?: (track: Track, time: number) => void;
 }
