@@ -169,7 +169,7 @@ export class FlakaPlayer {
         baseDelay: 1000,
         backoffFactor: 2,
         fuzzFactor: 0.5,
-      }
+      },
     };
     try {
       if (drmType === DrmType.FAIRPLAY && certificateUrl) {
