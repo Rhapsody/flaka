@@ -163,6 +163,17 @@ export class FlakaPlayer {
     try {
       if (drmType === DrmType.FAIRPLAY && certificateUrl) {
         this.player.configure({
+          manifest: {
+            retryParameters: {
+              timeout: 30000,
+              stallTimeout: 30000,
+              connectionTimeout: 30000,
+              maxAttempts: 5,
+              baseDelay: 1000,
+              backoffFactor: 2,
+              fuzzFactor: 0.5,
+            }
+          },
           drm: {
             advanced: {
               'com.apple.fps.1_0': {
