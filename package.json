@@ -1,6 +1,6 @@
 {
   "name": "flaka",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Streaming player for web player",
   "main": "dist/index.js",
   "private": true,
@@ -26,7 +26,7 @@
   "homepage": "https://github.com/Rhapsody/flaka#readme",
   "dependencies": {
     "mux.js": "^6.0.0",
-    "shaka-player": "antebarac/shaka-player",
+    "shaka-player": "^4.2.1",
     "typedoc": "^0.21.00"
   },
   "devDependencies": {
