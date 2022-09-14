@@ -160,21 +160,23 @@ export class FlakaPlayer {
     this.player.resetConfiguration();
     // Try to load a manifest.
     // This is an asynchronous process.
+    const retryParameters = {
+      retryParameters: {
+        timeout: 30000,
+        stallTimeout: 30000,
+        connectionTimeout: 30000,
+        maxAttempts: 5,
+        baseDelay: 1000,
+        backoffFactor: 2,
+        fuzzFactor: 0.5,
+      }
+    };
     try {
       if (drmType === DrmType.FAIRPLAY && certificateUrl) {
         this.player.configure({
-          manifest: {
-            retryParameters: {
-              timeout: 30000,
-              stallTimeout: 30000,
-              connectionTimeout: 30000,
-              maxAttempts: 5,
-              baseDelay: 1000,
-              backoffFactor: 2,
-              fuzzFactor: 0.5,
-            }
-          },
+          manifest: retryParameters,
           drm: {
+            ...retryParameters,
             advanced: {
               'com.apple.fps.1_0': {
                 serverCertificateUri: certificateUrl,
@@ -188,7 +190,9 @@ export class FlakaPlayer {
       if (serverUrl && drmType) {
         const servers = this.getServers(drmType, serverUrl);
         this.player.configure({
+          manifest: retryParameters,
           drm: {
+            ...retryParameters,
             servers,
           },
         });
