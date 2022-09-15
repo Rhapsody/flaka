@@ -243,7 +243,8 @@ export class FlakaPlayer {
         this.options.reportManifestLoadedTime(track, stats.manifestTimeSeconds);
       }
       if (/Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor)) {
-        this.videoElement.play();
+        // This is causing errors
+        //this.videoElement.play();
       }
 
       this.videoElement.play();
@@ -257,7 +258,6 @@ export class FlakaPlayer {
   }
 
   pause(): void {
-    console.log('PAUSE');
     this.videoElement.pause();
     this.changeState({ ...this.state, playState: PlayState.PAUSED });
   }
