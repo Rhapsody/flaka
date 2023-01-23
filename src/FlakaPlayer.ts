@@ -98,7 +98,7 @@ export class FlakaPlayer {
     }
   }
 
-  async configureFairPlay(token?: string): Promise<void> {
+  async configureFairPlay(token?: string, tokenHeader: string = 'customdata'): Promise<void> {
     let contentId;
 
     // DELETE OLD FILTERS
@@ -120,8 +120,7 @@ export class FlakaPlayer {
       const originalPayload = new Uint8Array(request.body as ArrayBufferLike);
       const data = `spc=${shaka.util.Uint8ArrayUtils.toStandardBase64(originalPayload)}&assetId=${contentId}`;
       request.headers['Content-Type'] = 'text/plain';
-      request.headers['customdata'] = token;
-      //request.body = shaka.util.StringUtils.toUTF8(encodeURIComponent(data));
+      request.headers[tokenHeader] = token;
       request.body = shaka.util.StringUtils.toUTF8(data);
     });
 
@@ -156,6 +155,7 @@ export class FlakaPlayer {
     drmType?: DrmType,
     token?: string,
     certificateUrl?: string,
+    customHeaderName?: string,
   ): Promise<void> {
     this.player.resetConfiguration();
     // Try to load a manifest.
@@ -184,8 +184,9 @@ export class FlakaPlayer {
             },
           },
         });
-        await this.configureFairPlay(token);
+        await this.configureFairPlay(token, customHeaderName ? customHeaderName : 'customdata');
       }
+
 
       if (serverUrl && drmType) {
         const servers = this.getServers(drmType, serverUrl);
@@ -198,10 +199,13 @@ export class FlakaPlayer {
         });
       }
 
+      let tokenHeader = 'customdata'
+      if (customHeaderName)
+        tokenHeader = customHeaderName
       if (token && drmType !== DrmType.FAIRPLAY) {
         this.player.getNetworkingEngine().registerRequestFilter(function (type, request) {
           if (type === shaka.net.NetworkingEngine.RequestType.LICENSE) {
-            request.headers['customdata'] = token;
+            request.headers[tokenHeader] = token;
           }
         });
       }
