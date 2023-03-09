@@ -125,15 +125,13 @@ export class FlakaPlayer {
     });
 
     this.player.getNetworkingEngine().registerResponseFilter((type, response) => {
-      if (type != shaka.net.NetworkingEngine.RequestType.LICENSE) {
-        return;
+      // https://fe.drmtoday.com/documentation/integration/player/shaka.html
+      if (type == shaka.net.NetworkingEngine.RequestType.LICENSE) {
+        if (this.player.keySystem() === "com.apple.fps") {
+          let responseText = shaka.util.StringUtils.fromUTF8(response.data);
+          response.data = shaka.util.Uint8ArrayUtils.fromBase64(responseText).buffer;
+        }
       }
-      let responseText = shaka.util.StringUtils.fromUTF8(response.data);
-      responseText = responseText.trim();
-      if (responseText.substr(0, 5) === '<ckc>' && responseText.substr(-6) === '</ckc>') {
-        responseText = responseText.slice(5, -6);
-      }
-      response.data = shaka.util.Uint8ArrayUtils.fromBase64(responseText).buffer;
     });
   }
 
