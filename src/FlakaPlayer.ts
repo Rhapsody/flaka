@@ -102,26 +102,26 @@ export class FlakaPlayer {
     let contentId;
 
     // DELETE OLD FILTERS
-    this.player.getNetworkingEngine().clearAllRequestFilters();
-    this.player.getNetworkingEngine().clearAllResponseFilters();
+    // this.player.getNetworkingEngine().clearAllRequestFilters();
+    // this.player.getNetworkingEngine().clearAllResponseFilters();
 
-    this.player.configure('drm.initDataTransform', (initData, initDataType, drmInfo) => {
-      if (initDataType !== 'skd') return initData;
-      // 'initData' is a buffer containing an 'skd://' URL as a UTF-8 string.
-      const skdUri = shaka.util.StringUtils.fromBytesAutoDetect(initData);
-      contentId = skdUri.split('skd://')[1];
-      return shaka.util.FairPlayUtils.initDataTransform(initData, contentId, drmInfo.serverCertificate);
-    });
+    // this.player.configure('drm.initDataTransform', (initData, initDataType, drmInfo) => {
+    //   if (initDataType !== 'skd') return initData;
+    //   // 'initData' is a buffer containing an 'skd://' URL as a UTF-8 string.
+    //   const skdUri = shaka.util.StringUtils.fromBytesAutoDetect(initData);
+    //   contentId = skdUri.split('skd://')[1];
+    //   return shaka.util.FairPlayUtils.initDataTransform(initData, contentId, drmInfo.serverCertificate);
+    // });
 
     this.player.getNetworkingEngine().registerRequestFilter((type, request) => {
       if (type !== shaka.net.NetworkingEngine.RequestType.LICENSE) {
         return;
       }
-      const originalPayload = new Uint8Array(request.body as ArrayBufferLike);
-      const data = `spc=${shaka.util.Uint8ArrayUtils.toStandardBase64(originalPayload)}&assetId=${contentId}`;
-      request.headers['Content-Type'] = 'text/plain';
+      // const originalPayload = new Uint8Array(request.body as ArrayBufferLike);
+      // const data = `spc=${shaka.util.Uint8ArrayUtils.toStandardBase64(originalPayload)}&assetId=${contentId}`;
+      // request.headers['Content-Type'] = 'text/plain';
       request.headers[tokenHeader] = token;
-      request.body = shaka.util.StringUtils.toUTF8(data);
+      //request.body = shaka.util.StringUtils.toUTF8(data);
     });
 
     this.player.getNetworkingEngine().registerResponseFilter((type, response) => {
