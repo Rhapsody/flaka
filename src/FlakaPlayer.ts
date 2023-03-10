@@ -112,6 +112,22 @@ export class FlakaPlayer {
     //   contentId = skdUri.split('skd://')[1];
     //   return shaka.util.FairPlayUtils.initDataTransform(initData, contentId, drmInfo.serverCertificate);
     // });
+    const req = await fetch('https://lic.drmtoday.com/license-server-fairplay/cert/napster');
+    const cert = await req.arrayBuffer();
+    this.player.configure({
+      drm: {
+        servers: {
+          'com.widevine.alpha': 'https://lic.staging.drmtoday.com/license-proxy-widevine/cenc/?specConform=true',
+          'com.microsoft.playready': 'https://lic.staging.drmtoday.com/license-proxy-headerauth/drmtoday/RightsManager.asmx',
+          'com.apple.fps': 'https://lic.staging.drmtoday.com/license-server-fairplay/',
+        },
+        advanced: {
+          'com.apple.fps': {
+            serverCertificate: new Uint8Array(cert)
+          }
+        }
+      }
+    });
 
     this.player.getNetworkingEngine().registerRequestFilter((type, request) => {
       if (type !== shaka.net.NetworkingEngine.RequestType.LICENSE) {
@@ -121,7 +137,7 @@ export class FlakaPlayer {
       // const data = `spc=${shaka.util.Uint8ArrayUtils.toStandardBase64(originalPayload)}&assetId=${contentId}`;
       // request.headers['Content-Type'] = 'text/plain';
       request.headers[tokenHeader] = token;
-      //request.body = shaka.util.StringUtils.toUTF8(data);
+
     });
 
     this.player.getNetworkingEngine().registerResponseFilter((type, response) => {
